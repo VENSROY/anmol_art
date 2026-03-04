@@ -45,8 +45,10 @@ export default function Contact() {
                   Visit Us
                 </h4>
                 <p className="text-sm leading-relaxed opacity-90">
-                  109, G.M. City, Behind Amrawati Nagar,  
-                  Sangriya, Salawas Road,  
+                  109, G.M. City, Behind Amrawati Nagar,
+                  <br />
+                  Sangriya, Salawas Road,
+                  <br />
                   Jodhpur Raj (342013)
                 </p>
               </div>
@@ -58,7 +60,7 @@ export default function Contact() {
                   Call Us
                 </h4>
                 <p className="text-sm opacity-90">
-                  9829037575
+                  9828037575
                 </p>
                 <p className="text-xs opacity-70 mt-1">
                   Mon – Sun, 10am – 7pm
@@ -75,19 +77,42 @@ export default function Contact() {
                   anmolart75@gmail.com
                 </p>
               </div>
+
             </div>
 
             {/* Social Icons */}
             <div className="flex justify-center gap-8 mt-16">
-              {[FaInstagram, FaFacebookF, FaWhatsapp].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-12 h-12 rounded-full border border-royal-gold flex items-center justify-center text-royal-gold hover:bg-royal-gold hover:text-royal-maroon transition duration-300"
-                >
-                  <Icon />
-                </a>
-              ))}
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/anmolart_75?utm_source=qr&igsh=MWo2ZGxzYmZwZ2Yydw=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 rounded-full border border-royal-gold flex items-center justify-center text-royal-gold hover:bg-royal-gold hover:text-royal-maroon transition duration-300"
+              >
+                <FaInstagram />
+              </a>
+
+              {/* Facebook */}
+              <a
+                href="https://www.facebook.com/share/187onm4iLL/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 rounded-full border border-royal-gold flex items-center justify-center text-royal-gold hover:bg-royal-gold hover:text-royal-maroon transition duration-300"
+              >
+                <FaFacebookF />
+              </a>
+
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/919828037575"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 rounded-full border border-royal-gold flex items-center justify-center text-royal-gold hover:bg-royal-gold hover:text-royal-maroon transition duration-300"
+              >
+                <FaWhatsapp />
+              </a>
+
             </div>
 
           </div>
