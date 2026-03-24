@@ -1,10 +1,11 @@
 export default function Services() {
   const services = [
     {
-      icon: "✒️",
-      title: "Custom Orders",
+      icon: "✈️",
+      title: "Export",
       desc:
-        "Have a specific design in mind? Our artisans can create bespoke pieces tailored to your exact specifications.",
+        "Reliable international shipping and handling, ensuring your artifacts arrive safely anywhere in the world.",
+      highlight: true,
     },
     {
       icon: "📦",
@@ -19,10 +20,10 @@ export default function Services() {
         "Elegant, cultural gifts for your clients and employees that leave a lasting impression.",
     },
     {
-      icon: "✈️",
-      title: "Export",
+      icon: "✒️",
+      title: "Custom Orders",
       desc:
-        "Reliable international shipping and handling, ensuring your artifacts arrive safely anywhere in the world.",
+        "Have a specific design in mind? Our artisans can create bespoke pieces tailored to your exact specifications.",
     },
   ];
 
@@ -32,13 +33,11 @@ export default function Services() {
       className="bg-royal-maroon py-28 text-ivory scroll-mt-28"
     >
       <div className="container mx-auto px-6 max-w-7xl">
-        {/* Heading */}
         <div className="text-center mb-20">
           <h2 className="font-serif text-5xl md:text-6xl font-bold text-royal-gold">
             Our Services
           </h2>
 
-          {/* Divider */}
           <div className="flex items-center justify-center mt-6">
             <span className="h-px w-24 bg-royal-gold/40"></span>
             <span className="mx-4 w-10 h-10 flex items-center justify-center border border-royal-gold bg-ivory">
@@ -48,33 +47,43 @@ export default function Services() {
           </div>
         </div>
 
-        {/* Services Grid */}
         <div className="grid md:grid-cols-2 gap-16">
           {services.map((item, index) => (
             <div
               key={index}
-              className="
-                group
-                border border-royal-gold/40
-                p-12
-                bg-[#5a1a2a]
-                transition
-                duration-300
-                hover:bg-white
-              "
+              className={`group border p-12 transition duration-300 ${
+                item.highlight
+                  ? "bg-white border-royal-gold scale-105"
+                  : "bg-[#5a1a2a] border-royal-gold/40 hover:bg-white"
+              }`}
             >
-              {/* Icon */}
-              <div className="text-royal-gold text-5xl mb-8 group-hover:text-royal-maroon transition">
+              <div
+                className={`text-5xl mb-8 transition ${
+                  item.highlight
+                    ? "text-royal-maroon"
+                    : "text-royal-gold group-hover:text-royal-maroon"
+                }`}
+              >
                 {item.icon}
               </div>
 
-              {/* Title */}
-              <h3 className="font-serif text-3xl font-bold mb-6 group-hover:text-royal-maroon transition">
+              <h3
+                className={`font-serif text-3xl font-bold mb-6 transition ${
+                  item.highlight
+                    ? "text-royal-maroon"
+                    : "group-hover:text-royal-maroon"
+                }`}
+              >
                 {item.title}
               </h3>
 
-              {/* Description */}
-              <p className="text-lg leading-relaxed opacity-90 group-hover:text-earthy-brown transition">
+              <p
+                className={`text-lg leading-relaxed transition ${
+                  item.highlight
+                    ? "text-earthy-brown"
+                    : "opacity-90 group-hover:text-earthy-brown"
+                }`}
+              >
                 {item.desc}
               </p>
             </div>
