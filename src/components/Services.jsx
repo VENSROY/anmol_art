@@ -5,7 +5,6 @@ export default function Services() {
       title: "Export",
       desc:
         "Reliable international shipping and handling, ensuring your artifacts arrive safely anywhere in the world.",
-      highlight: true,
     },
     {
       icon: "📦",
