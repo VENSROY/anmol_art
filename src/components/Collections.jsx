@@ -28,6 +28,26 @@ export default function Collections() {
       image: furnitureImg,
       path: "/collections/furniture",
     },
+    {
+      title: "Wood Craft",
+      image: craftImg,
+      path: "/collections/wood",
+    },
+    {
+      title: "Decor & Sculptures",
+      image: decorImg,
+      path: "/collections/decor",
+    },
+    {
+      title: "Painting & Hand Painted Wood",
+      image: paintingImg,
+      path: "/collections/painting",
+    },
+    {
+      title: "Furniture / Royal Wood Art",
+      image: furnitureImg,
+      path: "/collections/furniture",
+    },
   ];
 
   return (
