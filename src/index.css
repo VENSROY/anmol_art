@@ -1,70 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Scrollbar */
-
-::-webkit-scrollbar {
-    width: 10px;
+:root {
+  --royal-maroon: #5d001e;
+  --royal-gold: #d4af37;
+  --ivory: #fdfbf7;
+  --earthy-brown: #3d2b1f;
 }
 
-::-webkit-scrollbar-track {
-    background: #fdfbf7;
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--ivory);
+  color: var(--earthy-brown);
+  scroll-behavior: smooth;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #d4af37;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #5d001e;
-}
-
-
-/* Divider */
-
-.divider {
-    position: relative;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #d4af37, transparent);
-}
-
-.divider::after {
-    content: "♦";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: #fdfbf7;
-    padding: 0 10px;
-    color: #d4af37;
-    font-size: 1.5rem;
-}
-
-
-/* Reveal animation */
-
-.reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease-out;
-}
-
-.reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-/* Hero background */
-
-.hero-bg {
-    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(93, 0, 30, 0.4)), url("https://images.unsplash.com/photo-1599666805952-b91561f05479?auto=format&fit=crop&w=1920&q=80");
-    background-size: cover;
-    background-position: center;
+h1, h2, h3, .font-serif {
+  font-family: 'Playfair Display', serif;
 }
 
 .font-script {
-    font-family: "Great Vibes", cursive;
+  font-family: 'Great Vibes', cursive;
+}
+
+/* Custom Scrollbar - Furniture Boutiq Style */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ivory);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--royal-gold);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--royal-maroon);
+}
+
+/* Premium Card Effects */
+.stock-card-shadow {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stock-card-shadow:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(93, 0, 30, 0.1);
+}
+
+/* Elegant Divider */
+.divider-gold {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--royal-gold), transparent);
+  margin: 2rem 0;
+}
+
+.divider-gold::after {
+  content: "◈";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--ivory);
+  padding: 0 15px;
+  color: var(--royal-gold);
+  font-size: 1.2rem;
+}
+
+/* Buttons Polish */
+.btn-premium {
+  @apply relative overflow-hidden transition-all duration-300 active:scale-95;
+}
+
+.btn-premium::before {
+  content: '';
+  @apply absolute top-0 -left-full w-full h-full bg-white/20 skew-x-[-25deg] transition-all duration-500;
+}
+
+.btn-premium:hover::before {
+  @apply left-[150%];
+}
+
+/* Utility Classes */
+.bg-royal-maroon { background-color: var(--royal-maroon); }
+.text-royal-maroon { color: var(--royal-maroon); }
+.bg-royal-gold { background-color: var(--royal-gold); }
+.text-royal-gold { color: var(--royal-gold); }
+.bg-ivory { background-color: var(--ivory); }
+
+/* Animation for Hero */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
 }

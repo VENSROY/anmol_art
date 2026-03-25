@@ -1,90 +1,83 @@
 export default function Services() {
   const services = [
     {
-      icon: "✈️",
-      title: "Export",
-      desc:
-        "Reliable international shipping and handling, ensuring your artifacts arrive safely anywhere in the world.",
+      title: "Wholesale & Export",
+      desc: "Reliable bulk supply and international handling for boutiques and resellers worldwide with secure packaging.",
+      icon: "fa-ship",
+      category: "Global"
     },
     {
-      icon: "📦",
-      title: "Wholesale",
-      desc:
-        "Bulk supply for boutiques, hotels, and resellers at competitive rates without compromising quality.",
+      title: "Hotels & Resorts",
+      desc: "Customized royal furniture for guest rooms and lobbies that ensure your visitors feel the heritage of Rajasthan.",
+      icon: "fa-hotel",
+      category: "B2B"
     },
     {
-      icon: "🎁",
-      title: "Corporate Gifting",
-      desc:
-        "Elegant, cultural gifts for your clients and employees that leave a lasting impression.",
+      title: "Restaurants & Cafes",
+      desc: "Transform your dining space into an artwork with our authentic handcrafted tables, chairs, and theme-based decor.",
+      icon: "fa-utensils",
+      category: "B2B"
     },
     {
-      icon: "✒️",
-      title: "Custom Orders",
-      desc:
-        "Have a specific design in mind? Our artisans can create bespoke pieces tailored to your exact specifications.",
+      title: "Interior Designers",
+      desc: "We collaborate with architects to turn unique design concepts into reality with precision and premium materials.",
+      icon: "fa-compass-drafting",
+      category: "Professional"
     },
+    
   ];
 
   return (
-    <section
-      id="services"
-      className="bg-royal-maroon py-28 text-ivory scroll-mt-28"
-    >
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="text-center mb-20">
-          <h2 className="font-serif text-5xl md:text-6xl font-bold text-royal-gold">
-            Our Services
+    <section id="services" className="bg-royal-maroon py-32 text-ivory scroll-mt-28 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-royal-gold/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+      
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="text-center mb-24">
+          <span className="text-royal-gold font-serif italic text-xl tracking-widest block mb-4">Commercial Solutions</span>
+          <h2 className="font-serif text-5xl md:text-7xl font-bold text-white">
+            Our Expertise
           </h2>
-
-          <div className="flex items-center justify-center mt-6">
-            <span className="h-px w-24 bg-royal-gold/40"></span>
-            <span className="mx-4 w-10 h-10 flex items-center justify-center border border-royal-gold bg-ivory">
-              <span className="w-4 h-4 bg-royal-gold rotate-45"></span>
-            </span>
-            <span className="h-px w-24 bg-royal-gold/40"></span>
+          <div className="flex items-center justify-center mt-8">
+            <span className="h-[1px] w-20 bg-royal-gold/30"></span>
+            <div className="mx-4 w-12 h-12 flex items-center justify-center border border-royal-gold/50 rotate-45">
+              <div className="w-6 h-6 bg-royal-gold shadow-[0_0_15px_rgba(212,175,55,0.5)]"></div>
+            </div>
+            <span className="h-[1px] w-20 bg-royal-gold/30"></span>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-16">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
           {services.map((item, index) => (
             <div
               key={index}
-              className={`group border p-12 transition duration-300 ${
-                item.highlight
-                  ? "bg-white border-royal-gold scale-105"
-                  : "bg-[#5a1a2a] border-royal-gold/40 hover:bg-white"
-              }`}
+              className="group relative bg-[#4a0e1e] border border-royal-gold/20 p-10 md:p-14 transition-all duration-500 hover:bg-white overflow-hidden rounded-br-[4rem]"
             >
-              <div
-                className={`text-5xl mb-8 transition ${
-                  item.highlight
-                    ? "text-royal-maroon"
-                    : "text-royal-gold group-hover:text-royal-maroon"
-                }`}
-              >
-                {item.icon}
+              <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-100 transition-opacity">
+                <span className="text-royal-gold font-bold text-xs tracking-tighter uppercase border border-royal-gold px-3 py-1">
+                  {item.category}
+                </span>
               </div>
 
-              <h3
-                className={`font-serif text-3xl font-bold mb-6 transition ${
-                  item.highlight
-                    ? "text-royal-maroon"
-                    : "group-hover:text-royal-maroon"
-                }`}
-              >
+              <div className="text-5xl mb-10 text-royal-gold group-hover:text-royal-maroon transition-transform duration-500 group-hover:-translate-y-2">
+                <i className={`fa-solid ${item.icon}`}></i>
+              </div>
+
+              <h3 className="font-serif text-3xl font-bold mb-6 text-white group-hover:text-royal-maroon transition-colors">
                 {item.title}
               </h3>
 
-              <p
-                className={`text-lg leading-relaxed transition ${
-                  item.highlight
-                    ? "text-earthy-brown"
-                    : "opacity-90 group-hover:text-earthy-brown"
-                }`}
-              >
+              <p className="text-lg leading-relaxed text-gray-300 group-hover:text-earthy-brown transition-colors">
                 {item.desc}
               </p>
+              
+              <div className="mt-10 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                <a 
+                  href={`https://wa.me/919828037575?text=I am interested in ${item.title} services`}
+                  className="text-royal-maroon font-bold uppercase text-sm border-b-2 border-royal-maroon pb-1 hover:text-royal-gold hover:border-royal-gold"
+                >
+                  Discuss Project
+                </a>
+              </div>
             </div>
           ))}
         </div>
