@@ -13,13 +13,14 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+
   const handleNavigation = (id) => {
     setOpen(false);
     if (location.pathname !== "/") {
       navigate("/");
-      setTimeout(() => {
-        scrollToSection(id);
-      }, 100);
+      setTimeout(() => scrollToSection(id), 150);
     } else {
       scrollToSection(id);
     }
@@ -27,55 +28,111 @@ export default function Navbar() {
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
+  const navLinks = [
+    { label: "Home", action: () => handleNavigation("home") },
+    { label: "About", action: () => handleNavigation("about") },
+    { label: "Collections", link: "/collections" },
+    { label: "Antique", action: () => handleNavigation("antique") },
+    { label: "Services", action: () => handleNavigation("services") },
+    { label: "Contact", action: () => handleNavigation("contact") },
+  ];
+
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-300 bg-ivory/95 backdrop-blur-md border-b-2 border-royal-gold ${
-        scrolled ? "shadow-lg py-3" : "py-5"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <button
-          onClick={() => handleNavigation("home")}
-          className="text-2xl md:text-3xl font-serif font-bold text-royal-maroon flex items-center gap-2 tracking-tight"
-        >
-          <i className="fa-solid fa-crown text-royal-gold"></i>
-          ANMOL Art
-        </button>
-
-        <div className="hidden md:flex items-center space-x-7 font-bold text-[15px] tracking-wide text-royal-maroon">
-          <button onClick={() => handleNavigation("home")} className="hover:text-royal-gold transition">Home</button>
-          <button onClick={() => handleNavigation("about")} className="hover:text-royal-gold transition">About</button>
-          <Link to="/collections" className="hover:text-royal-gold transition">Collections</Link>
-          <button onClick={() => handleNavigation("antique")} className="hover:text-royal-gold transition">Antique</button>
-          <button onClick={() => handleNavigation("services")} className="hover:text-royal-gold transition">Services</button>
-          <button onClick={() => handleNavigation("contact")} className="hover:text-royal-gold transition">Contact</button>
+    <>
+      {/* Top bar – phone + social */}
+      <div className="hidden md:flex bg-royal-maroon text-white/70 text-[11px] tracking-widest uppercase justify-between items-center px-8 py-2">
+        <span>📍 Jodhpur, Rajasthan – Est. 2006</span>
+        <div className="flex gap-6 items-center">
+          <a href="tel:+919828037575" className="hover:text-royal-gold transition">📞 +91 98280 37575</a>
+          <a href="https://www.instagram.com/anmolart_75" target="_blank" rel="noreferrer" className="hover:text-royal-gold transition">Instagram</a>
+          <a href="https://wa.me/919828037575" target="_blank" rel="noreferrer" className="hover:text-royal-gold transition">WhatsApp</a>
         </div>
-
-        <button
-          className="md:hidden text-2xl text-royal-maroon"
-          onClick={() => setOpen(!open)}
-        >
-          <i className={`fa-solid ${open ? 'fa-xmark' : 'fa-bars'}`}></i>
-        </button>
       </div>
 
-      {open && (
-        <div className="md:hidden bg-ivory border-t border-royal-gold shadow-xl">
-          <div className="flex flex-col p-6 space-y-5 text-center font-bold text-base tracking-wide text-royal-maroon">
-            <button onClick={() => handleNavigation("home")}>Home</button>
-            <button onClick={() => handleNavigation("about")}>About</button>
-            <Link to="/collections" onClick={() => setOpen(false)}>Collections</Link>
-            <button onClick={() => handleNavigation("antique")}>Antique</button>
-            <button onClick={() => handleNavigation("services")}>Services</button>
-            <button onClick={() => handleNavigation("contact")}>Contact</button>
+      <nav
+        className={`sticky top-0 w-full z-50 transition-all duration-300 bg-ivory/97 backdrop-blur-md border-b border-royal-gold/30 ${
+          scrolled ? "shadow-md py-3" : "py-4"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          {/* Logo */}
+          <button
+            onClick={() => handleNavigation("home")}
+            aria-label="ANMOL Art – Home"
+            className="text-2xl md:text-3xl font-serif font-bold text-royal-maroon flex items-center gap-2 tracking-tight"
+          >
+            <i className="fa-solid fa-crown text-royal-gold" aria-hidden="true" />
+            ANMOL Art
+          </button>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-7 font-bold text-[13px] tracking-wider text-royal-maroon uppercase">
+            {navLinks.map((item) =>
+              item.link ? (
+                <Link key={item.label} to={item.link} className="hover:text-royal-gold transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-royal-gold after:transition-all hover:after:w-full">
+                  {item.label}
+                </Link>
+              ) : (
+                <button key={item.label} onClick={item.action} className="hover:text-royal-gold transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-royal-gold after:transition-all hover:after:w-full">
+                  {item.label}
+                </button>
+              )
+            )}
+            {/* WhatsApp CTA */}
+            <a
+              href="https://wa.me/919828037575?text=Hello! I'm interested in ANMOL Art products."
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 bg-royal-maroon text-white px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-royal-gold hover:text-royal-maroon transition-all duration-300"
+            >
+              <i className="fa-brands fa-whatsapp text-base" />
+              WhatsApp
+            </a>
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            className="md:hidden text-2xl text-royal-maroon"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? "Close menu" : "Open menu"}
+          >
+            <i className={`fa-solid ${open ? "fa-xmark" : "fa-bars"}`} />
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden bg-ivory border-t border-royal-gold/20 overflow-hidden transition-all duration-300 ${
+            open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="flex flex-col p-6 space-y-4 text-center font-bold text-sm tracking-widest uppercase text-royal-maroon">
+            {navLinks.map((item) =>
+              item.link ? (
+                <Link key={item.label} to={item.link} onClick={() => setOpen(false)} className="py-2 hover:text-royal-gold transition">
+                  {item.label}
+                </Link>
+              ) : (
+                <button key={item.label} onClick={item.action} className="py-2 hover:text-royal-gold transition">
+                  {item.label}
+                </button>
+              )
+            )}
+            <a
+              href="https://wa.me/919828037575"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 py-3 bg-royal-maroon text-white flex items-center justify-center gap-2 hover:bg-royal-gold hover:text-royal-maroon transition"
+            >
+              <i className="fa-brands fa-whatsapp" />
+              Chat on WhatsApp
+            </a>
           </div>
         </div>
-      )}
-    </nav>
+      </nav>
+    </>
   );
 }

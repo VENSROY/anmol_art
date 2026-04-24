@@ -8,6 +8,7 @@ import FAQ from "./components/FAQ";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Stock from "./components/Stock";
+import WhatsAppFloat from "./components/WhatsAppFloat"; // ✅ LINE 1 ADD
 
 function Home() {
   return (
@@ -28,7 +29,7 @@ export default function App() {
     <Router>
       <div className="bg-ivory text-earthy-brown overflow-x-hidden min-h-screen flex flex-col">
         <Navbar />
-        
+
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -42,6 +43,7 @@ export default function App() {
         </main>
 
         <Footer />
+        <WhatsAppFloat /> {}
       </div>
     </Router>
   );
