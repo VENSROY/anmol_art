@@ -11,11 +11,20 @@
   --earthy-brown: #3d2b1f;
 }
 
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ivory: #0f172a;
+    --earthy-brown: #e2e8f0;
+  }
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background-color: var(--ivory);
   color: var(--earthy-brown);
   scroll-behavior: smooth;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 h1, h2, h3, .font-serif {
@@ -26,7 +35,7 @@ h1, h2, h3, .font-serif {
   font-family: 'Great Vibes', cursive;
 }
 
-/* Custom Scrollbar - Furniture Boutiq Style */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -44,58 +53,7 @@ h1, h2, h3, .font-serif {
   background: var(--royal-maroon);
 }
 
-/* Premium Card Effects */
-.stock-card-shadow {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.stock-card-shadow:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(93, 0, 30, 0.1);
-}
-
-/* Elegant Divider */
-.divider-gold {
-  position: relative;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--royal-gold), transparent);
-  margin: 2rem 0;
-}
-
-.divider-gold::after {
-  content: "◈";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--ivory);
-  padding: 0 15px;
-  color: var(--royal-gold);
-  font-size: 1.2rem;
-}
-
-/* Buttons Polish */
-.btn-premium {
-  @apply relative overflow-hidden transition-all duration-300 active:scale-95;
-}
-
-.btn-premium::before {
-  content: '';
-  @apply absolute top-0 -left-full w-full h-full bg-white/20 skew-x-[-25deg] transition-all duration-500;
-}
-
-.btn-premium:hover::before {
-  @apply left-[150%];
-}
-
-/* Utility Classes */
-.bg-royal-maroon { background-color: var(--royal-maroon); }
-.text-royal-maroon { color: var(--royal-maroon); }
-.bg-royal-gold { background-color: var(--royal-gold); }
-.text-royal-gold { color: var(--royal-gold); }
-.bg-ivory { background-color: var(--ivory); }
-
-/* Animation for Hero */
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -103,4 +61,14 @@ h1, h2, h3, .font-serif {
 
 .animate-fade-in {
   animation: fadeIn 1s ease-out forwards;
+}
+
+/* Image blur animation */
+@keyframes blur-in {
+  from { filter: blur(10px); }
+  to { filter: blur(0); }
+}
+
+.blur-in {
+  animation: blur-in 0.5s ease-out;
 }
