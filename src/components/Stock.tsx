@@ -111,11 +111,11 @@ const Stock: FC = () => {
               className="break-inside-avoid cursor-pointer group relative overflow-hidden rounded-lg"
             >
               <img
-                src={item.compressed}
-                alt={item.name}
-                loading="lazy"
-                className="w-full object-cover group-hover:scale-110 transition duration-500"
-              />
+  src={item.image}
+  alt={item.name}
+  loading="lazy"
+  className="w-full object-cover group-hover:scale-110 transition duration-500"
+/>
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-3">
                 <p className="text-white font-bold text-sm">{item.name}</p>
                 <p className="text-white/70 text-xs">{item.material}</p>
