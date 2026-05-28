@@ -36,7 +36,12 @@ const LiveChat: FC = () => {
 
     // AI Response (simple rule-based)
     setTimeout(() => {
-      let response = "Thanks for your message! Contact us via WhatsApp for quick reply.";
+      let response = `Thanks for your message!
+Contact us via WhatsApp for a quick reply.
+
+Quick Connect
++91 98280 37575`;
+
 
       if (input.toLowerCase().includes("price")) {
         response = "Prices vary by product. Use WhatsApp to get custom quotes.";
