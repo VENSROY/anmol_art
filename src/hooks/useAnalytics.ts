@@ -25,6 +25,9 @@ export function trackEvent(event: AnalyticsEvent): void {
 
 export function trackPageView(path: string): void {
   if (TRACKING_ID) {
-    ReactGA.pageview(path);
+    ReactGA.send({
+  hitType: "pageview",
+  page: path,
+});
   }
 }
