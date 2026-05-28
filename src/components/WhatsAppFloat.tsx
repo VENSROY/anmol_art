@@ -20,7 +20,7 @@ export default function WhatsAppFloat() {
 
   return (
     <a
-      href="https://wa.me/919828037575?text=Namaste ANMOL Art! Mujhe aapke products mein interest hai."
+href="https://wa.me/919828037575?text=Hello ANMOL Art! I’m interested in exploring your handcrafted furniture and luxury decor collection. Please share more details."
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with ANMOL Art on WhatsApp"
