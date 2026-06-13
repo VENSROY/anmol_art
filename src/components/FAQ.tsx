@@ -20,7 +20,7 @@ export default function FAQ() {
     },
   ];
 
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section id="faq" className="bg-[#FBF6E6] py-32 scroll-mt-28">

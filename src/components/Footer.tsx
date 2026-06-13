@@ -21,7 +21,7 @@ export default function Footer() {
           <ul className="space-y-3 text-[15px] font-medium">
             <li><button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="hover:text-royal-gold transition">Home</button></li>
             <li><Link to="/collections" className="hover:text-royal-gold transition">Collections</Link></li>
-            <li><button onClick={() => document.getElementById('antique')?.scrollIntoView({behavior:'smooth'})} className="hover:text-royal-gold transition">Antique</button></li>
+            <li><button onClick={() => document.getElementById('about')?.scrollIntoView({behavior:'smooth'})} className="hover:text-royal-gold transition">About</button></li>
             <li><button onClick={() => document.getElementById('services')?.scrollIntoView({behavior:'smooth'})} className="hover:text-royal-gold transition">Services</button></li>
           </ul>
         </div>

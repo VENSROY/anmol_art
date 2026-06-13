@@ -27,7 +27,7 @@ export default function Collections() {
       count: "340+ Designs",
       image: paintingImg,
       path: "/collections/painting",
-      color: "#F3F0D0"
+      color: "bg-[#F3F0D0]"
     },
     {
       title: "Royal Wood Art",
@@ -106,7 +106,7 @@ export default function Collections() {
               Can't find exactly what you're looking for? Our master artisans specialize in bespoke designs tailored to your specific space and style.
             </p>
             <button 
-              onClick={() => document.getElementById('contact').scrollIntoView({behavior:'smooth'})}
+              onClick={() => document.getElementById('contact')?.scrollIntoView({behavior:'smooth'})}
               className="bg-royal-gold text-royal-maroon px-10 py-4 font-bold uppercase tracking-widest hover:bg-white transition-colors"
             >
               Start Custom Order

@@ -80,13 +80,13 @@ export default function Hero() {
 
         <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
-            onClick={() => document.getElementById('collection').scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })}
             className="w-full sm:w-auto px-10 py-4 bg-royal-gold text-royal-maroon font-bold uppercase tracking-[0.2em] text-sm hover:bg-white transition-all duration-300 active:scale-95 shadow-2xl"
           >
             Explore Collections
           </button>
           <button
-            onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             className="w-full sm:w-auto px-10 py-4 border border-white/50 text-white font-bold uppercase tracking-[0.2em] text-sm hover:bg-white hover:text-royal-maroon transition-all duration-300 active:scale-95"
           >
             Get Quote on WhatsApp
