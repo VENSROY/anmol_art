@@ -44,12 +44,7 @@ href="https://wa.me/919828037575?text=Hello ANMOL Art! I’m interested in explo
         Chat with us!
       </span>
 
-      <style>{`
-        @keyframes ping {
-          75%, 100% { transform: scale(1.6); opacity: 0; }
-        }
-        .animate-ping { animation: ping 1.2s cubic-bezier(0,0,0.2,1) infinite; }
-      `}</style>
+      {/* ping animation defined globally in index.css */}
     </a>
   );
 }

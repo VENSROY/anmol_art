@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
+/**
+ * ⚠️ SECURITY NOTE: VITE_ADMIN_PASSWORD is a client-side env variable.
+ * It is bundled into the production JavaScript and readable by anyone.
+ * This is a temporary solution. Migrate to Supabase Auth for production.
+ */
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "";
 
 interface Props {
   onLogin: () => void;
@@ -27,7 +32,7 @@ export default function AdminLogin({ onLogin }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a0a12] flex items-center justify-center px-4">
+    <div className="relative min-h-screen bg-[#1a0a12] flex items-center justify-center px-4">
       {/* Background pattern */}
       <div
         className="absolute inset-0 opacity-[0.04]"
@@ -54,9 +59,10 @@ export default function AdminLogin({ onLogin }: Props) {
               autoFocus
               className={`w-full rounded-xl px-4 py-3.5 pr-12 text-sm outline-none transition
                 bg-white/5 border text-white placeholder-white/20
-                ${error
-                  ? "border-red-500/60 bg-red-500/10 animate-[shake_0.4s_ease]"
-                  : "border-white/10 focus:border-royal-gold/60 focus:bg-white/8"
+                ${
+                  error
+                    ? "border-red-500/60 bg-red-500/10 animate-shake"
+                    : "border-white/10 focus:border-royal-gold/60 focus:bg-white/8"
                 }`}
             />
             <button
@@ -93,13 +99,7 @@ export default function AdminLogin({ onLogin }: Props) {
         </p>
       </div>
 
-      <style>{`
-        @keyframes shake {
-          0%,100% { transform: translateX(0); }
-          20%,60%  { transform: translateX(-6px); }
-          40%,80%  { transform: translateX(6px); }
-        }
-      `}</style>
+      {/* shake animation defined globally in index.css */}
     </div>
   );
 }

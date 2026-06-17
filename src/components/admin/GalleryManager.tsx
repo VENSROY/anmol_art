@@ -34,8 +34,9 @@ export default function GalleryManager({ images, categories, loading, onRefresh,
       await supabase.from("stock_images").delete().eq("id", img.id);
       showToast("🗑️ Image deleted!");
       onRefresh();
-    } catch (err: any) {
-      showToast("Delete failed: " + err.message, "error");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Unknown error";
+      showToast("Delete failed: " + msg, "error");
     }
     setDeletingId(null);
     setConfirmId(null);
@@ -71,7 +72,7 @@ export default function GalleryManager({ images, categories, loading, onRefresh,
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h2 className="font-serif text-2xl font-bold text-royal-maroon flex items-center gap-2">
-            <i className="fa-solid fa-images text-royal-gold" />
+            <i className="fa-solid fa-images text-royal-gold" aria-hidden="true" />
             Manage Stock
             <span className="text-base font-normal text-earthy-brown/40 ml-1">({filtered.length})</span>
           </h2>
@@ -108,7 +109,7 @@ export default function GalleryManager({ images, categories, loading, onRefresh,
       {/* Empty */}
       {!loading && filtered.length === 0 && (
         <div className="text-center py-20 text-earthy-brown/30">
-          <i className="fa-solid fa-image text-5xl mb-3 block" />
+          <i className="fa-solid fa-image text-5xl mb-3 block" aria-hidden="true" />
           <p className="text-sm uppercase tracking-widest">No images in this category</p>
         </div>
       )}
@@ -171,7 +172,7 @@ export default function GalleryManager({ images, categories, loading, onRefresh,
                     hover:bg-red-700 disabled:opacity-50 shadow-lg z-10"
                   title="Delete image"
                 >
-                  <i className="fa-solid fa-trash text-xs" />
+                  <i className="fa-solid fa-trash text-xs" aria-hidden="true" />
                 </button>
               )}
             </div>
@@ -195,7 +196,7 @@ export default function GalleryManager({ images, categories, loading, onRefresh,
                 onClick={() => setEditingImg(null)}
                 className="text-earthy-brown/30 hover:text-royal-maroon transition text-xl"
               >
-                <i className="fa-solid fa-xmark" />
+                <i className="fa-solid fa-xmark" aria-hidden="true" />
               </button>
             </div>
 
@@ -245,7 +246,7 @@ export default function GalleryManager({ images, categories, loading, onRefresh,
               >
                 {saving
                   ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  : <><i className="fa-solid fa-floppy-disk" /> Save Changes</>
+                  : <><i className="fa-solid fa-floppy-disk" aria-hidden="true" /> Save Changes</>
                 }
               </button>
               <button

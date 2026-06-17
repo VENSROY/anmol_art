@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import showroomImg from "../assets/showroom.jpg";
 import craftImg from "../assets/CRAFT.png";
@@ -17,14 +17,14 @@ export default function Hero() {
     { image: decorImg, title: "Divine Decor", subtitle: "Sculptures", tag: "Handcrafted Sculptures" },
   ];
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-  const prevSlide = () => setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  const nextSlide = useCallback(() => setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1)), [slides.length]);
+  const prevSlide = useCallback(() => setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1)), [slides.length]);
 
   useEffect(() => {
     setLoaded(true);
     const timer = setInterval(nextSlide, 7000);
     return () => clearInterval(timer);
-  }, []);
+  }, [nextSlide]);
 
   return (
     <section
@@ -62,7 +62,7 @@ export default function Hero() {
         <h1 className="font-serif text-white text-5xl md:text-8xl font-bold leading-[1.05] drop-shadow-2xl mb-6">
           {slides[currentSlide].title}
           <br />
-          <span className="text-royal-gold italic">&amp; {slides[currentSlide].subtitle}</span>
+          <span className="text-royal-gold italic">& {slides[currentSlide].subtitle}</span>
         </h1>
 
         <div className="flex items-center justify-center gap-4 mb-8">
@@ -108,16 +108,16 @@ export default function Hero() {
       <button
         onClick={prevSlide}
         aria-label="Previous slide"
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition-all duration-300"
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition-all duration-300 focus-visible:ring-2 focus-visible:ring-royal-gold"
       >
-        <i className="fa-solid fa-chevron-left" />
+        <i className="fa-solid fa-chevron-left" aria-hidden="true" />
       </button>
       <button
         onClick={nextSlide}
         aria-label="Next slide"
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition-all duration-300"
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition-all duration-300 focus-visible:ring-2 focus-visible:ring-royal-gold"
       >
-        <i className="fa-solid fa-chevron-right" />
+        <i className="fa-solid fa-chevron-right" aria-hidden="true" />
       </button>
 
       {/* Dots */}
@@ -140,10 +140,7 @@ export default function Hero() {
         <div className="w-px h-12 bg-gradient-to-b from-royal-gold to-transparent animate-bounce" />
       </div>
 
-      <style>{`
-        @keyframes kenburns { from { transform: scale(1.05); } to { transform: scale(1.2); } }
-        .animate-kenburns { animation: kenburns 12s ease-out infinite alternate; }
-      `}</style>
+      {/* kenburns animation defined globally in index.css */}
     </section>
   );
 }

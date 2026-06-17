@@ -1,7 +1,7 @@
 {
   "name": "anmol-art",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -48,6 +48,7 @@
     "postcss-selector-parser": "^6.1.2",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.3.3",
+    "typescript-eslint": "^8.61.1",
     "vite": "^5.4.10",
     "vitest": "^1.1.0"
   }

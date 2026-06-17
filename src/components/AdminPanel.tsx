@@ -6,7 +6,7 @@ import Toast         from "./admin/Toast";
 import CategoryManager from "./admin/CategoryManager";
 import UploadSection from "./admin/UploadSection";
 import GalleryManager from "./admin/GalleryManager";
-import { StockImage, Category, ToastState } from "./admin/types";
+import type { StockImage, Category, ToastState } from "./admin/types";
 
 type Tab = "gallery" | "upload" | "categories";
 
@@ -14,7 +14,7 @@ type Tab = "gallery" | "upload" | "categories";
 function StatCard({ icon, value, label }: { icon: string; value: number; label: string }) {
   return (
     <div className="bg-white rounded-2xl p-5 border border-royal-gold/10 shadow-sm text-center hover:shadow-md transition">
-      <i className={`fa-solid ${icon} text-royal-gold text-lg mb-2 block`} />
+      <i className={`fa-solid ${icon} text-royal-gold text-lg mb-2 block`} aria-hidden="true" />
       <p className="text-3xl font-bold font-serif text-royal-maroon leading-none">{value}</p>
       <p className="text-[10px] uppercase tracking-widest text-earthy-brown/40 mt-1.5 leading-tight">{label}</p>
     </div>
@@ -85,7 +85,7 @@ export default function AdminPanel() {
       <nav className="bg-royal-maroon text-white px-6 py-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-royal-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
-            <i className="fa-solid fa-crown text-royal-gold text-base" />
+            <i className="fa-solid fa-crown text-royal-gold text-base" aria-hidden="true" />
           </div>
           <div>
             <p className="font-serif text-lg font-bold text-white leading-none">ANMOL Art</p>
@@ -104,14 +104,14 @@ export default function AdminPanel() {
               uppercase tracking-widest transition border border-white/10 hover:border-royal-gold/40
               px-3 py-1.5 rounded-lg"
           >
-            <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" /> View Site
+            <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" aria-hidden="true" /> View Site
           </a>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10
               px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition text-white"
           >
-            <i className="fa-solid fa-right-from-bracket" /> Logout
+            <i className="fa-solid fa-right-from-bracket" aria-hidden="true" /> Logout
           </button>
         </div>
       </nav>
@@ -140,7 +140,7 @@ export default function AdminPanel() {
                   : "text-earthy-brown/50 hover:text-royal-maroon hover:bg-[#FBF6E6]"
                 }`}
             >
-              <i className={`fa-solid ${tab.icon}`} />
+              <i className={`fa-solid ${tab.icon}`} aria-hidden="true" />
               <span className="hidden sm:inline">{tab.label}</span>
             </button>
           ))}

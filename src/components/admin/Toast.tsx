@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { ToastState } from "./types";
+import type { ToastState } from "./types";
 
 interface Props {
   toast: ToastState;
@@ -21,11 +20,17 @@ export default function Toast({ toast }: Props) {
 
   return (
     <div
+      role="alert"
+      aria-live="polite"
+      aria-atomic="true"
       className={`fixed top-5 right-5 z-[300] px-5 py-3.5 rounded-xl shadow-2xl
         text-sm font-bold flex items-center gap-2.5 text-white animate-fade-in
         ${colors[toast.type] ?? "bg-royal-maroon"}`}
     >
-      <i className={`fa-solid ${icons[toast.type] ?? "fa-circle-check"} text-white/80`} />
+      <i
+        className={`fa-solid ${icons[toast.type] ?? "fa-circle-check"} text-white/80`}
+        aria-hidden="true"
+      />
       {toast.message}
     </div>
   );

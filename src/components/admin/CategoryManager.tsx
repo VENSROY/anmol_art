@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { Category, ToastState } from "./types";
+import type { Category, ToastState } from "./types";
 
 interface Props {
   categories: Category[];
@@ -63,7 +63,7 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-royal-gold/15 p-8">
       <h2 className="font-serif text-2xl font-bold text-royal-maroon mb-1 flex items-center gap-2">
-        <i className="fa-solid fa-tags text-royal-gold" />
+        <i className="fa-solid fa-tags text-royal-gold" aria-hidden="true" />
         Manage Categories
       </h2>
       <p className="text-earthy-brown/40 text-xs uppercase tracking-widest mb-6">
@@ -89,9 +89,9 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
             transition disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
         >
           {creating ? (
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
           ) : (
-            <i className="fa-solid fa-plus" />
+            <i className="fa-solid fa-plus" aria-hidden="true" />
           )}
           Add Category
         </button>
@@ -100,7 +100,7 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
       {/* Category list */}
       {categories.length === 0 ? (
         <div className="text-center py-10 text-earthy-brown/30">
-          <i className="fa-solid fa-folder-open text-4xl mb-3 block" />
+          <i className="fa-solid fa-folder-open text-4xl mb-3 block" aria-hidden="true" />
           <p className="text-sm uppercase tracking-widest">No categories yet — create one above</p>
         </div>
       ) : (
@@ -143,7 +143,7 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
                     hover:text-red-500 flex-shrink-0 ml-2"
                   title={`Delete "${cat.name}"`}
                 >
-                  <i className="fa-solid fa-trash text-xs" />
+                  <i className="fa-solid fa-trash text-xs" aria-hidden="true" />
                 </button>
               )}
             </div>

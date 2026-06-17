@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { supabase } from "../../lib/supabase";
-import { Category, ToastState } from "./types";
+import type { Category, ToastState } from "./types";
 
 interface Props {
   categories: Category[];
@@ -73,9 +73,10 @@ export default function UploadSection({ categories, onUploaded, showToast }: Pro
         if (dbErr) throw dbErr;
 
         success++;
-      } catch (err: any) {
+      } catch (err: unknown) {
         failed++;
-        showToast(`Upload failed: ${err.message}`, "error");
+        const msg = err instanceof Error ? err.message : "Upload failed";
+        showToast(`Upload failed: ${msg}`, "error");
       }
     }
 
@@ -91,7 +92,7 @@ export default function UploadSection({ categories, onUploaded, showToast }: Pro
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-royal-gold/15 p-8">
       <h2 className="font-serif text-2xl font-bold text-royal-maroon mb-1 flex items-center gap-2">
-        <i className="fa-solid fa-cloud-arrow-up text-royal-gold" />
+        <i className="fa-solid fa-cloud-arrow-up text-royal-gold" aria-hidden="true" />
         Upload Stock Images
       </h2>
       <p className="text-earthy-brown/40 text-xs uppercase tracking-widest mb-6">
@@ -147,7 +148,7 @@ export default function UploadSection({ categories, onUploaded, showToast }: Pro
               rounded-xl px-4 py-3 text-sm text-earthy-brown/50 cursor-pointer
               hover:border-royal-gold hover:text-royal-maroon transition bg-[#FBF6E6]"
           >
-            <i className="fa-solid fa-paperclip text-royal-gold" />
+            <i className="fa-solid fa-paperclip text-royal-gold" aria-hidden="true" />
             <span>Browse or drop images</span>
             <input
               ref={fileRef}
@@ -206,7 +207,7 @@ export default function UploadSection({ categories, onUploaded, showToast }: Pro
           {uploading ? (
             <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Uploading…</>
           ) : (
-            <><i className="fa-solid fa-upload" /> Upload {previews.length > 0 ? `(${previews.length})` : ""}</>
+            <><i className="fa-solid fa-upload" aria-hidden="true" /> Upload {previews.length > 0 ? `(${previews.length})` : ""}</>
           )}
         </button>
 

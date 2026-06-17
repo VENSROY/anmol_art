@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-interface NavbarProps {
-  themeToggle?: () => void;
-  isDark?: boolean;
-}
-
-export default function Navbar({ themeToggle, isDark }: NavbarProps) {
+export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
@@ -53,11 +48,7 @@ export default function Navbar({ themeToggle, isDark }: NavbarProps) {
           <a href="tel:+919828037575" className="hover:text-royal-gold transition">📞 +91 98280 37575</a>
           <a href="https://www.instagram.com/anmolart_75" target="_blank" rel="noreferrer" className="hover:text-royal-gold transition">Instagram</a>
           <a href="https://wa.me/919828037575" target="_blank" rel="noreferrer" className="hover:text-royal-gold transition">WhatsApp</a>
-          {themeToggle && (
-            <button onClick={themeToggle} className="hover:text-royal-gold transition">
-              {isDark ? "☀️" : "🌙"}
-            </button>
-          )}
+
         </div>
       </div>
 

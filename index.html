@@ -2,15 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Favicon: replace vite.svg with an actual favicon for production -->
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="apple-touch-icon" href="/vite.svg" />
-    <meta name="theme-color" content="#6B0F1A" />
+    <meta name="theme-color" content="#5D001E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ANMOL Art – Handcrafted Furniture & Indian Handicrafts | Jodhpur, Rajasthan</title>
+
+    <!-- Primary SEO -->
+    <title>ANMOL Art – Handcrafted Furniture &amp; Indian Handicrafts | Jodhpur, Rajasthan</title>
     <meta name="description" content="ANMOL Art offers authentic handcrafted wooden furniture, sculptures, and Indian handicrafts from Jodhpur, Rajasthan. Est. 2006. Export to 20+ countries. Wholesale and custom orders welcome." />
     <meta name="keywords" content="handcrafted furniture Jodhpur, Indian handicrafts, Rajasthani furniture, wooden furniture export, antique furniture Rajasthan, ANMOL Art, custom wood furniture India" />
     <meta name="author" content="ANMOL Art, Jodhpur" />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.anmolart.com/" />
+
+    <!-- Open Graph / Social -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.anmolart.com/" />
     <meta property="og:title" content="ANMOL Art – Handcrafted Indian Furniture from Jodhpur" />
@@ -18,21 +24,80 @@
     <meta property="og:image" content="https://www.anmolart.com/og-image.jpg" />
     <meta property="og:locale" content="en_IN" />
     <meta property="og:site_name" content="ANMOL Art" />
+
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ANMOL Art – Handcrafted Indian Furniture from Jodhpur" />
     <meta name="twitter:description" content="Authentic Rajasthani furniture, decor and handicrafts. Wholesale and export to 20+ countries." />
     <meta name="twitter:image" content="https://www.anmolart.com/og-image.jpg" />
+
+    <!-- Geo -->
     <meta name="geo.region" content="IN-RJ" />
     <meta name="geo.placename" content="Jodhpur, Rajasthan" />
     <meta name="geo.position" content="26.2389;73.0243" />
+
+    <!-- Google Fonts (single preconnect block, fonts aligned with index.css) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"ANMOL Art","image":"https://www.anmolart.com/logo.png","description":"Authentic handcrafted Indian furniture from Jodhpur, Rajasthan. Est. 2006.","url":"https://www.anmolart.com","telephone":"+91-98280-37575","email":"anmolart75@gmail.com","foundingDate":"2006","address":{"@type":"PostalAddress","streetAddress":"109, G.M. City, Sangriya, Salawas Road","addressLocality":"Jodhpur","addressRegion":"Rajasthan","postalCode":"342013","addressCountry":"IN"},"geo":{"@type":"GeoCoordinates","latitude":"26.2389","longitude":"73.0243"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"10:00","closes":"19:00"},"sameAs":["https://www.instagram.com/anmolart_75","https://www.facebook.com/share/187onm4iLL/"]}</script>
+    <!-- NOTE: The actual font CSS import lives in src/index.css (Playfair Display, Inter, Great Vibes).
+         Do NOT add another font link here to avoid double-loading. -->
+
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Structured Data (LocalBusiness) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "ANMOL Art",
+      "image": "https://www.anmolart.com/logo.png",
+      "description": "Authentic handcrafted Indian furniture from Jodhpur, Rajasthan. Est. 2006.",
+      "url": "https://www.anmolart.com",
+      "telephone": "+91-98280-37575",
+      "email": "anmolart75@gmail.com",
+      "foundingDate": "2006",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "109, G.M. City, Sangriya, Salawas Road",
+        "addressLocality": "Jodhpur",
+        "addressRegion": "Rajasthan",
+        "postalCode": "342013",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "26.2389",
+        "longitude": "73.0243"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "10:00",
+        "closes": "19:00"
+      },
+      "sameAs": [
+        "https://www.instagram.com/anmolart_75",
+        "https://www.facebook.com/share/187onm4iLL/"
+      ]
+    }
+    </script>
   </head>
   <body>
+    <!-- Skip to main content link for keyboard users -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:bg-royal-gold focus:text-royal-maroon focus:px-4 focus:py-2 focus:font-bold focus:rounded"
+    >
+      Skip to main content
+    </a>
+
     <div id="root"></div>
-<script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

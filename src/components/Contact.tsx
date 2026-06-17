@@ -51,13 +51,14 @@ export default function Contact() {
               <p className="uppercase tracking-[0.3em] text-xs text-royal-gold font-bold mb-8">Follow Our Journey</p>
               <div className="flex gap-6">
                 {[
-                  { icon: <FaInstagram />, link: "https://www.instagram.com/anmolart_75" },
-                  { icon: <FaFacebookF />, link: "https://www.facebook.com/share/187onm4iLL/" },
-                  { icon: <FaWhatsapp />, link: "https://wa.me/919828037575" }
+                  { icon: <FaInstagram aria-hidden="true" />, link: "https://www.instagram.com/anmolart_75", label: "Follow us on Instagram" },
+                  { icon: <FaFacebookF aria-hidden="true" />, link: "https://www.facebook.com/share/187onm4iLL/", label: "Follow us on Facebook" },
+                  { icon: <FaWhatsapp aria-hidden="true" />, link: "https://wa.me/919828037575", label: "Chat with us on WhatsApp" }
                 ].map((social, i) => (
                   <a
                     key={i}
                     href={social.link}
+                    aria-label={social.label}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-xl hover:bg-royal-gold hover:text-royal-maroon hover:border-royal-gold transition-all duration-300"

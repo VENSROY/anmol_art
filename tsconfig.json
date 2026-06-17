@@ -14,12 +14,13 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "noEmit": true,
-    "strict": false,
-    "noUnusedLocals": false,
+    "strict": true,
+    "noUnusedLocals": true,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "types": ["react", "react-dom"]
+    "exactOptionalPropertyTypes": false
   },
   "include": ["src"],
+  "exclude": ["src/_archive"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

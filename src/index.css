@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;700&family=Great+Vibes&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Design Tokens ──────────────────────────────────────────────────────────── */
 :root {
   --royal-maroon: #5d001e;
   --royal-gold: #d4af37;
@@ -11,20 +12,14 @@
   --earthy-brown: #3d2b1f;
 }
 
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ivory: #0f172a;
-    --earthy-brown: #e2e8f0;
-  }
-}
-
+/* ─── Base Styles ────────────────────────────────────────────────────────────── */
 body {
   font-family: 'Inter', sans-serif;
   background-color: var(--ivory);
   color: var(--earthy-brown);
   scroll-behavior: smooth;
-  transition: background-color 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, .font-serif {
@@ -35,7 +30,7 @@ h1, h2, h3, .font-serif {
   font-family: 'Great Vibes', cursive;
 }
 
-/* Scrollbar */
+/* ─── Custom Scrollbar ───────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -53,22 +48,66 @@ h1, h2, h3, .font-serif {
   background: var(--royal-maroon);
 }
 
-/* Animations */
+/* ─── Animations ─────────────────────────────────────────────────────────────── */
+
+/* Fade-in with upward slide */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
   animation: fadeIn 1s ease-out forwards;
 }
 
-/* Image blur animation */
+/* Image blur-in on load */
 @keyframes blur-in {
   from { filter: blur(10px); }
-  to { filter: blur(0); }
+  to   { filter: blur(0); }
 }
 
 .blur-in {
   animation: blur-in 0.5s ease-out;
+}
+
+/* Ken Burns pan/zoom used in Hero slideshow */
+@keyframes kenburns {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.2); }
+}
+
+.animate-kenburns {
+  animation: kenburns 12s ease-out infinite alternate;
+}
+
+/* Admin login shake on wrong password */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60%  { transform: translateX(-6px); }
+  40%, 80%  { transform: translateX(6px); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease;
+}
+
+/* WhatsApp pulse ring */
+@keyframes ping {
+  75%, 100% { transform: scale(1.6); opacity: 0; }
+}
+
+.animate-ping {
+  animation: ping 1.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ─── Focus Styles (Accessibility) ──────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--royal-gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Print ──────────────────────────────────────────────────────────────────── */
+@media print {
+  nav, footer, .fixed { display: none !important; }
 }
