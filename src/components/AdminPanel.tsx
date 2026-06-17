@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "../lib/supabase";
+import { supabase, isSupabaseConfigured } from "../lib/supabase";
 
 import AdminLogin    from "./admin/AdminLogin";
 import Toast         from "./admin/Toast";
@@ -37,6 +37,7 @@ export default function AdminPanel() {
 
   // ── Fetch categories from DB ────────────────────────────────────────────────
   const fetchCategories = useCallback(async () => {
+    if (!isSupabaseConfigured) return;
     const { data, error } = await supabase
       .from("categories")
       .select("*")
@@ -46,6 +47,10 @@ export default function AdminPanel() {
 
   // ── Fetch images ────────────────────────────────────────────────────────────
   const fetchImages = useCallback(async () => {
+    if (!isSupabaseConfigured) {
+      setLoadingImgs(false);
+      return;
+    }
     setLoadingImgs(true);
     const { data, error } = await supabase
       .from("stock_images")
@@ -117,6 +122,17 @@ export default function AdminPanel() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+
+        {/* ── Configuration Warning ── */}
+        {!isSupabaseConfigured && (
+          <div className="bg-red-50 border border-red-200/60 text-red-800 rounded-2xl p-6 shadow-sm text-center">
+            <i className="fa-solid fa-triangle-exclamation text-red-600 text-3xl mb-2 block" aria-hidden="true" />
+            <p className="font-serif text-lg font-bold text-royal-maroon mb-1">Missing Supabase Configuration</p>
+            <p className="text-xs text-earthy-brown/80 max-w-lg mx-auto font-light leading-relaxed">
+              Admin operations (creating/deleting categories and uploading images) require a configured Supabase database connection. Set your keys in <code className="bg-white/60 px-1.5 py-0.5 rounded font-mono text-[10px]">.env</code> to enable features.
+            </p>
+          </div>
+        )}
 
         {/* ── Stats Row ── */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">

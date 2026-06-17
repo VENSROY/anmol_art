@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import type { StockImage, Category } from "./admin/types";
 
 export default function Stock() {
@@ -24,6 +24,10 @@ export default function Stock() {
   }, [urlCategory]);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
     const fetchAll = async () => {
       const [imgRes, catRes] = await Promise.all([
         supabase.from("stock_images").select("*").order("created_at", { ascending: false }),
@@ -147,8 +151,25 @@ export default function Stock() {
           </div>
         )}
 
+        {/* ── Configuration Warning ── */}
+        {!loading && !isSupabaseConfigured && (
+          <div className="max-w-2xl mx-auto border border-royal-gold/30 rounded-2xl p-8 text-center bg-white shadow-sm my-16">
+            <i className="fa-solid fa-circle-exclamation text-royal-gold text-4xl mb-4 block" aria-hidden="true" />
+            <p className="text-royal-maroon font-serif text-xl font-bold mb-2">
+              Stock Gallery Offline
+            </p>
+            <p className="text-earthy-brown/70 text-sm leading-relaxed mb-6 font-light">
+              The database connection is not configured yet. Copy the <code className="bg-ivory px-2 py-1 rounded text-xs font-mono">.env.example</code> file to <code className="bg-ivory px-2 py-1 rounded text-xs font-mono">.env</code> and set your credentials.
+            </p>
+            <div className="text-xs text-left bg-ivory p-4 rounded-lg font-mono text-royal-maroon/80 border border-royal-gold/10 inline-block">
+              VITE_SUPABASE_URL=your_supabase_url<br/>
+              VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+            </div>
+          </div>
+        )}
+
         {/* ── Empty ── */}
-        {!loading && filtered.length === 0 && (
+        {!loading && isSupabaseConfigured && filtered.length === 0 && (
           <div className="text-center py-32 text-earthy-brown/30">
             <i className="fa-solid fa-image text-6xl mb-4 block" aria-hidden="true" />
             <p className="text-sm uppercase tracking-widest">No images in this category yet</p>

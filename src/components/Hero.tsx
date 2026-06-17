@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import showroomImg from "../assets/showroom.jpg";
 import craftImg from "../assets/CRAFT.png";
 import decorImg from "../assets/DECOR_SCULPTURES.png";
 import furnitureImg from "../assets/FURNITURE_ROYAL_WOOD_ART.png";
 
 export default function Hero() {
-  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
