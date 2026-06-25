@@ -107,6 +107,16 @@ h1, h2, h3, .font-serif {
   border-radius: 2px;
 }
 
+/* ─── Admin Form Utilities ───────────────────────────────────────────────────── */
+.label-text {
+  @apply text-xs font-bold uppercase tracking-widest text-earthy-brown/50 block mb-2;
+}
+
+.admin-input {
+  @apply w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-royal-maroon
+    outline-none focus:border-royal-gold transition placeholder-earthy-brown/30 bg-white;
+}
+
 /* ─── Print ──────────────────────────────────────────────────────────────────── */
 @media print {
   nav, footer, .fixed { display: none !important; }

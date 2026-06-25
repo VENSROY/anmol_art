@@ -1,17 +1,22 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import type { Session } from "@supabase/supabase-js";
 
-import AdminLogin    from "./admin/AdminLogin";
-import Toast         from "./admin/Toast";
+import AdminLogin      from "./admin/AdminLogin";
+import Toast           from "./admin/Toast";
+import GalleryManager  from "./admin/GalleryManager";
+import UploadSection   from "./admin/UploadSection";
 import CategoryManager from "./admin/CategoryManager";
-import UploadSection from "./admin/UploadSection";
-import GalleryManager from "./admin/GalleryManager";
+import HeroManager     from "./admin/HeroManager";
+import ServicesManager from "./admin/ServicesManager";
+import FAQManager      from "./admin/FAQManager";
+import SiteSettingsManager from "./admin/SiteSettingsManager";
+import InquiriesManager    from "./admin/InquiriesManager";
 import type { StockImage, Category, ToastState } from "./admin/types";
 
-type Tab = "gallery" | "upload" | "categories";
+type Tab = "gallery" | "upload" | "categories" | "hero" | "services" | "faq" | "settings" | "inquiries";
 
-// ─── Stats Card ───────────────────────────────────────────────────────────────
-function StatCard({ icon, value, label }: { icon: string; value: number; label: string }) {
+function StatCard({ icon, value, label }: { icon: string; value: number | string; label: string }) {
   return (
     <div className="bg-white rounded-2xl p-5 border border-royal-gold/10 shadow-sm text-center hover:shadow-md transition">
       <i className={`fa-solid ${icon} text-royal-gold text-lg mb-2 block`} aria-hidden="true" />
@@ -21,63 +26,95 @@ function StatCard({ icon, value, label }: { icon: string; value: number; label: 
   );
 }
 
-// ─── Main AdminPanel ──────────────────────────────────────────────────────────
 export default function AdminPanel() {
-  const [authed, setAuthed]         = useState(!!sessionStorage.getItem("anmol_admin"));
+  const [session, setSession]   = useState<Session | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [images, setImages]         = useState<StockImage[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingImgs, setLoadingImgs] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [activeTab, setActiveTab]   = useState<Tab>("gallery");
   const [toast, setToast]           = useState<ToastState>({ message: "", type: "success" });
+
+  // ── Auth: listen for session changes ───────────────────────────────────────
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      setSession(s);
+      setAuthLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const showToast = useCallback((message: string, type: ToastState["type"] = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast({ message: "", type: "success" }), 3200);
   }, []);
 
-  // ── Fetch categories from DB ────────────────────────────────────────────────
   const fetchCategories = useCallback(async () => {
     if (!isSupabaseConfigured) return;
     const { data, error } = await supabase
-      .from("categories")
-      .select("*")
-      .order("created_at", { ascending: true });
+      .from("categories").select("*").order("created_at", { ascending: true });
     if (!error) setCategories(data || []);
   }, []);
 
-  // ── Fetch images ────────────────────────────────────────────────────────────
   const fetchImages = useCallback(async () => {
-    if (!isSupabaseConfigured) {
-      setLoadingImgs(false);
-      return;
-    }
+    if (!isSupabaseConfigured) { setLoadingImgs(false); return; }
     setLoadingImgs(true);
     const { data, error } = await supabase
-      .from("stock_images")
-      .select("*")
-      .order("created_at", { ascending: false });
+      .from("stock_images").select("*").order("created_at", { ascending: false });
     if (!error) setImages(data || []);
     setLoadingImgs(false);
   }, []);
 
+  const fetchUnread = useCallback(async () => {
+    if (!isSupabaseConfigured) return;
+    const { count } = await supabase
+      .from("contact_submissions")
+      .select("id", { count: "exact", head: true })
+      .eq("read", false);
+    setUnreadCount(count ?? 0);
+  }, []);
+
   useEffect(() => {
-    if (authed) {
+    if (session) {
       fetchCategories();
       fetchImages();
+      fetchUnread();
     }
-  }, [authed, fetchCategories, fetchImages]);
+  }, [session, fetchCategories, fetchImages, fetchUnread]);
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("anmol_admin");
-    setAuthed(false);
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
   };
 
-  if (!authed) return <AdminLogin onLogin={() => setAuthed(true)} />;
+  // ── Loading auth state ──────────────────────────────────────────────────────
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#1a0a12] flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-royal-gold border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
-  const tabs: { id: Tab; label: string; icon: string }[] = [
+  // ── Not logged in ───────────────────────────────────────────────────────────
+  if (!session) {
+    return <AdminLogin onLogin={() => { /* session listener handles it */ }} />;
+  }
+
+  const tabs: { id: Tab; label: string; icon: string; badge?: number }[] = [
     { id: "gallery",    label: "Gallery",    icon: "fa-images" },
     { id: "upload",     label: "Upload",     icon: "fa-cloud-arrow-up" },
     { id: "categories", label: "Categories", icon: "fa-tags" },
+    { id: "hero",       label: "Hero",       icon: "fa-panorama" },
+    { id: "services",   label: "Services",   icon: "fa-briefcase" },
+    { id: "faq",        label: "FAQ",        icon: "fa-circle-question" },
+    { id: "inquiries",  label: "Inquiries",  icon: "fa-inbox", badge: unreadCount },
+    { id: "settings",   label: "Settings",   icon: "fa-gear" },
   ];
 
   const catCount = (cat: string) => images.filter((i) => i.category === cat).length;
@@ -95,12 +132,15 @@ export default function AdminPanel() {
           <div>
             <p className="font-serif text-lg font-bold text-white leading-none">ANMOL Art</p>
             <p className="text-white/40 text-[10px] uppercase tracking-widest leading-none mt-0.5">
-              Admin Panel · {images.length} images
+              Admin Panel
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
+          <span className="hidden sm:block text-white/30 text-xs truncate max-w-[180px]">
+            {session.user.email}
+          </span>
           <a
             href="/"
             target="_blank"
@@ -123,43 +163,54 @@ export default function AdminPanel() {
 
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
 
-        {/* ── Configuration Warning ── */}
+        {/* ── Supabase Warning ── */}
         {!isSupabaseConfigured && (
           <div className="bg-red-50 border border-red-200/60 text-red-800 rounded-2xl p-6 shadow-sm text-center">
             <i className="fa-solid fa-triangle-exclamation text-red-600 text-3xl mb-2 block" aria-hidden="true" />
             <p className="font-serif text-lg font-bold text-royal-maroon mb-1">Missing Supabase Configuration</p>
             <p className="text-xs text-earthy-brown/80 max-w-lg mx-auto font-light leading-relaxed">
-              Admin operations (creating/deleting categories and uploading images) require a configured Supabase database connection. Set your keys in <code className="bg-white/60 px-1.5 py-0.5 rounded font-mono text-[10px]">.env</code> to enable features.
+              Set <code className="bg-white/60 px-1.5 py-0.5 rounded font-mono text-[10px]">VITE_SUPABASE_URL</code> and{" "}
+              <code className="bg-white/60 px-1.5 py-0.5 rounded font-mono text-[10px]">VITE_SUPABASE_ANON_KEY</code> in your{" "}
+              <code className="bg-white/60 px-1.5 py-0.5 rounded font-mono text-[10px]">.env</code> file.
             </p>
           </div>
         )}
 
-        {/* ── Stats Row ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          <StatCard icon="fa-images"      value={images.length}      label="Total Images" />
-          <StatCard icon="fa-tags"        value={categories.length}  label="Categories" />
+        {/* ── Stats ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+          <StatCard icon="fa-images"   value={images.length}      label="Total Images" />
+          <StatCard icon="fa-tags"     value={categories.length}  label="Categories" />
+          <StatCard icon="fa-inbox"    value={unreadCount}        label="New Inquiries" />
           {categories.slice(0, 3).map((c) => (
             <StatCard key={c.id} icon="fa-layer-group" value={catCount(c.name)} label={c.name} />
           ))}
         </div>
 
-        {/* ── Tab Bar ── */}
-        <div className="bg-white rounded-2xl border border-royal-gold/15 shadow-sm p-1.5 flex gap-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold
-                uppercase tracking-wider transition
-                ${activeTab === tab.id
-                  ? "bg-royal-maroon text-white shadow-md"
-                  : "text-earthy-brown/50 hover:text-royal-maroon hover:bg-[#FBF6E6]"
-                }`}
-            >
-              <i className={`fa-solid ${tab.icon}`} aria-hidden="true" />
-              <span className="hidden sm:inline">{tab.label}</span>
-            </button>
-          ))}
+        {/* ── Tab Bar (scrollable on mobile) ── */}
+        <div className="bg-white rounded-2xl border border-royal-gold/15 shadow-sm p-1.5">
+          <div className="flex gap-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`relative flex-shrink-0 flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl text-sm font-bold
+                  uppercase tracking-wider transition whitespace-nowrap
+                  ${activeTab === tab.id
+                    ? "bg-royal-maroon text-white shadow-md"
+                    : "text-earthy-brown/50 hover:text-royal-maroon hover:bg-[#FBF6E6]"
+                  }`}
+              >
+                <i className={`fa-solid ${tab.icon}`} aria-hidden="true" />
+                <span className="hidden sm:inline">{tab.label}</span>
+                {tab.badge != null && tab.badge > 0 && (
+                  <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full leading-none
+                    ${activeTab === tab.id ? "bg-royal-gold text-royal-maroon" : "bg-royal-maroon text-white"}`}>
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* ── Tab Content ── */}
@@ -172,7 +223,6 @@ export default function AdminPanel() {
             showToast={showToast}
           />
         )}
-
         {activeTab === "upload" && (
           <UploadSection
             categories={categories}
@@ -180,13 +230,27 @@ export default function AdminPanel() {
             showToast={showToast}
           />
         )}
-
         {activeTab === "categories" && (
           <CategoryManager
             categories={categories}
             onCategoriesChange={() => { fetchCategories(); fetchImages(); }}
             showToast={showToast}
           />
+        )}
+        {activeTab === "hero" && (
+          <HeroManager showToast={showToast} />
+        )}
+        {activeTab === "services" && (
+          <ServicesManager showToast={showToast} />
+        )}
+        {activeTab === "faq" && (
+          <FAQManager showToast={showToast} />
+        )}
+        {activeTab === "inquiries" && (
+          <InquiriesManager showToast={showToast} />
+        )}
+        {activeTab === "settings" && (
+          <SiteSettingsManager showToast={showToast} />
         )}
 
       </div>

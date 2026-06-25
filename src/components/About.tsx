@@ -1,13 +1,15 @@
+import { useSiteConfig } from "../hooks/useSiteConfig";
 import aboutImg from "../assets/about.png";
 
 export default function About() {
-  const stats = [
-    { label: "Designs", value: "5,000+", icon: "fa-couch" },
-    { label: "Experience", value: "20+ Yrs", icon: "fa-award" },
-    { label: "Countries", value: "20+", icon: "fa-globe" },
-    { label: "Artisans", value: "100+", icon: "fa-hands-holding-circle" },
-  ];
+  const { get } = useSiteConfig();
 
+  const stats = [
+    { label: "Designs",    value: get("stat_designs"),    icon: "fa-couch" },
+    { label: "Experience", value: get("stat_experience"), icon: "fa-award" },
+    { label: "Countries",  value: get("stat_countries"),  icon: "fa-globe" },
+    { label: "Artisans",   value: get("stat_artisans"),   icon: "fa-hands-holding-circle" },
+  ];
 
   const pillars = [
     {
@@ -29,13 +31,11 @@ export default function About() {
 
   return (
     <section id="about" className="bg-[#FBF6E6] py-24 scroll-mt-28 relative overflow-hidden">
-      {/* Subtle background ornament */}
       <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-royal-gold/5 blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-7xl">
-        {/* Main Grid */}
         <div className="grid md:grid-cols-2 gap-16 items-center mb-28">
-          {/* Image Side */}
+          {/* Image */}
           <div className="relative group">
             <div className="absolute -top-6 -left-6 w-full h-full border-2 border-royal-gold/30 rounded-2xl group-hover:-top-4 group-hover:-left-4 transition-all duration-500 pointer-events-none" />
             <img
@@ -45,36 +45,32 @@ export default function About() {
             />
             <div className="absolute -bottom-10 -right-10 hidden lg:flex flex-col items-center justify-center bg-royal-maroon p-8 rounded-2xl shadow-xl z-20 border-b-4 border-royal-gold w-36 h-36">
               <p className="text-royal-gold font-serif text-3xl font-bold leading-none">Est.</p>
-              <p className="text-white text-3xl font-bold leading-none mt-1">2006</p>
+              <p className="text-white text-3xl font-bold leading-none mt-1">{get("established_year")}</p>
             </div>
           </div>
 
-          {/* Text Side */}
+          {/* Text */}
           <div>
             <span className="font-serif text-royal-gold text-base tracking-[0.3em] uppercase block mb-4">
               Our Legacy
             </span>
             <h2 className="font-serif text-5xl md:text-6xl font-bold text-royal-maroon mb-8 leading-tight">
-              Preserving a <br /> Dying Heritage
+              {get("about_title")}
             </h2>
             <p className="text-earthy-brown text-lg leading-relaxed mb-5">
-              Founded in the heart of Rajasthan, <strong>ANMOL Art</strong> began as a humble initiative to
-              support local artisans whose skills have been passed down through centuries. We believe that
-              true luxury lies in the imperfection of the handmade.
+              {get("about_body_1")}
             </p>
             <p className="text-earthy-brown text-lg leading-relaxed mb-5">
-              Each creation reflects patience, passion, and cultural pride — carefully crafted using
-              traditional techniques that honour India's rich artistic heritage.
+              {get("about_body_2")}
             </p>
             <p className="text-earthy-brown text-lg leading-relaxed mb-8">
-              Through ANMOL Art, we bridge the gap between traditional Indian craftsmanship and modern
-              aesthetics, bringing soulful art into contemporary homes across the world.
+              {get("about_body_3")}
             </p>
 
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-8 border-t border-royal-gold/20">
               {stats.map((stat, i) => (
-                <div key={i} className="text-center group">
+                <div key={i} className="text-center">
                   <p className="text-royal-maroon text-3xl font-bold font-serif">{stat.value}</p>
                   <p className="text-earthy-brown text-[10px] uppercase tracking-[0.2em] font-bold mt-1">
                     {stat.label}

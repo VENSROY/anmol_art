@@ -1,57 +1,79 @@
 import { Link } from "react-router-dom";
+import { useSiteConfig } from "../hooks/useSiteConfig";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  const { get } = useSiteConfig();
+  const currentYear  = new Date().getFullYear();
+  const instagram    = get("instagram_url");
+  const facebook     = get("facebook_url");
+  const waNumber     = get("whatsapp_number");
+  const phone        = get("phone");
+  const address      = get("address");
+  const footerDesc   = get("footer_description");
 
   return (
     <footer className="bg-earthy-brown text-ivory pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
         <div className="flex flex-col items-center md:items-start">
           <h3 className="text-2xl font-serif font-bold text-royal-gold flex items-center gap-2 mb-6">
-            <i className="fa-solid fa-crown" aria-hidden="true"></i>
+            <i className="fa-solid fa-crown" aria-hidden="true" />
             ANMOL Art
           </h3>
           <p className="text-sm opacity-80 leading-relaxed text-center md:text-left">
-            Preserving the royal heritage of Jodhpur through timeless handcrafted furniture and artistic masterpieces since 2006.
+            {footerDesc}
           </p>
         </div>
 
         <div className="text-center md:text-left">
           <h4 className="font-bold tracking-widest text-sm mb-6 border-b border-royal-gold/30 pb-2 w-fit mx-auto md:mx-0 uppercase">Navigation</h4>
           <ul className="space-y-3 text-[15px] font-medium">
-            <li><button onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})} className="hover:text-royal-gold transition">Home</button></li>
+            <li><button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-royal-gold transition">Home</button></li>
             <li><Link to="/collections" className="hover:text-royal-gold transition">Collections</Link></li>
-            <li><button onClick={() => document.getElementById('about')?.scrollIntoView({behavior:'smooth'})} className="hover:text-royal-gold transition">About</button></li>
-            <li><button onClick={() => document.getElementById('services')?.scrollIntoView({behavior:'smooth'})} className="hover:text-royal-gold transition">Services</button></li>
+            <li><button onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-royal-gold transition">About</button></li>
+            <li><button onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-royal-gold transition">Services</button></li>
+            <li><button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-royal-gold transition">Contact</button></li>
           </ul>
         </div>
 
         <div className="text-center md:text-left">
           <h4 className="font-bold tracking-widest text-sm mb-6 border-b border-royal-gold/30 pb-2 w-fit mx-auto md:mx-0 uppercase">Contact Us</h4>
           <ul className="space-y-4 text-sm opacity-80">
-            <li className="flex items-start gap-3 justify-center md:justify-start">
-              <i className="fa-solid fa-location-dot text-royal-gold mt-1" aria-hidden="true"></i>
-              <span>109, G.M. City, Sangriya, <br /> Jodhpur, Raj (342013)</span>
-            </li>
-            <li className="flex items-center gap-3 justify-center md:justify-start">
-              <i className="fa-solid fa-phone text-royal-gold" aria-hidden="true"></i>
-              <span>+91 98280 37575</span>
-            </li>
+            {address && (
+              <li className="flex items-start gap-3 justify-center md:justify-start">
+                <i className="fa-solid fa-location-dot text-royal-gold mt-1 flex-shrink-0" aria-hidden="true" />
+                <span>{address}</span>
+              </li>
+            )}
+            {phone && (
+              <li className="flex items-center gap-3 justify-center md:justify-start">
+                <i className="fa-solid fa-phone text-royal-gold flex-shrink-0" aria-hidden="true" />
+                <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-royal-gold transition">{phone}</a>
+              </li>
+            )}
           </ul>
         </div>
 
         <div className="text-center md:text-left">
           <h4 className="font-bold tracking-widest text-sm mb-6 border-b border-royal-gold/30 pb-2 w-fit mx-auto md:mx-0 uppercase">Connect</h4>
           <div className="flex justify-center md:justify-start gap-4">
-            <a href="https://www.instagram.com/anmolart_75" target="_blank" rel="noreferrer" aria-label="Follow ANMOL Art on Instagram" className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
-              <i className="fa-brands fa-instagram" aria-hidden="true"></i>
-            </a>
-            <a href="https://wa.me/919828037575" target="_blank" rel="noreferrer" aria-label="Chat with ANMOL Art on WhatsApp" className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
-              <i className="fa-brands fa-whatsapp" aria-hidden="true"></i>
-            </a>
-            <a href="https://www.facebook.com/share/187onm4iLL/" target="_blank" rel="noreferrer" aria-label="Follow ANMOL Art on Facebook" className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
-              <i className="fa-brands fa-facebook-f" aria-hidden="true"></i>
-            </a>
+            {instagram && (
+              <a href={instagram} target="_blank" rel="noreferrer" aria-label="Follow ANMOL Art on Instagram"
+                className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
+                <i className="fa-brands fa-instagram" aria-hidden="true" />
+              </a>
+            )}
+            {waNumber && (
+              <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer" aria-label="Chat with ANMOL Art on WhatsApp"
+                className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
+                <i className="fa-brands fa-whatsapp" aria-hidden="true" />
+              </a>
+            )}
+            {facebook && (
+              <a href={facebook} target="_blank" rel="noreferrer" aria-label="Follow ANMOL Art on Facebook"
+                className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
+                <i className="fa-brands fa-facebook-f" aria-hidden="true" />
+              </a>
+            )}
           </div>
         </div>
       </div>

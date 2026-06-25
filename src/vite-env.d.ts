@@ -32,11 +32,6 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL: string;
   /** Supabase anon public key */
   readonly VITE_SUPABASE_ANON_KEY: string;
-  /**
-   * Admin panel password.
-   * ⚠️ SECURITY: This is bundled into client-side JS. Use Supabase Auth for production.
-   */
-  readonly VITE_ADMIN_PASSWORD: string;
   /** Google Analytics 4 Measurement ID (optional) */
   readonly VITE_GA_ID?: string;
 }
