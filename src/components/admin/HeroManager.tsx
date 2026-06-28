@@ -23,6 +23,7 @@ export default function HeroManager({ showToast }: Props) {
   const [saving, setSaving]     = useState(false);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   const fetch = useCallback(async () => {
     setLoading(true);
@@ -99,8 +100,6 @@ export default function HeroManager({ showToast }: Props) {
     await supabase.from("hero_slides").update({ active: !slide.active }).eq("id", slide.id);
     fetch();
   };
-
-  const [showForm, setShowForm] = useState(false);
 
   return (
     <div className="space-y-6">

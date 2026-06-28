@@ -38,16 +38,39 @@ export default function AdminPanel() {
 
   // ── Auth: listen for session changes ───────────────────────────────────────
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s);
+    let active = true;
+
+    // If Supabase isn't configured we can't authenticate at all — surface the
+    // login screen rather than spinning forever.
+    if (!isSupabaseConfigured) {
       setAuthLoading(false);
-    });
+      return;
+    }
+
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: s } }) => {
+        if (active) setSession(s);
+      })
+      .catch(async (err) => {
+        // A corrupt/stale token in localStorage can reject getSession and leave
+        // the panel stuck on its loading screen. Clear it and fall back to login.
+        console.error("[AdminPanel] getSession failed — clearing stale session", err);
+        try { await supabase.auth.signOut(); } catch { /* ignore */ }
+        if (active) setSession(null);
+      })
+      .finally(() => {
+        if (active) setAuthLoading(false);
+      });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
+      if (active) setSession(s);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const showToast = useCallback((message: string, type: ToastState["type"] = "success") => {
