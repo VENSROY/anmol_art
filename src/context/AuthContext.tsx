@@ -13,10 +13,14 @@ import {
   signOut as signOutService,
   signInWithPassword as signInService,
 } from "../services/auth.service";
+import { getProfile } from "../services/profiles.service";
 import { supabase } from "../lib/supabase";
+import type { Role } from "../constants/roles";
 
 interface AuthContextValue {
   session: Session | null;
+  /** RBAC role of the signed-in user (null when signed out or no profile). */
+  role: Role | null;
   /** True until the initial session lookup resolves. */
   loading: boolean;
   /** Whether Supabase credentials are present at all. */
@@ -34,6 +38,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -71,8 +76,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // Resolve the RBAC role from the profile whenever the user changes.
+  useEffect(() => {
+    let active = true;
+    const userId = session?.user.id;
+    if (!userId) {
+      setRole(null);
+      return;
+    }
+    getProfile(userId)
+      .then((profile) => {
+        if (active) setRole(profile?.role ?? null);
+      })
+      .catch((err) => {
+        console.error("[Auth] failed to load profile role", err);
+        if (active) setRole(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [session?.user.id]);
+
   const value: AuthContextValue = {
     session,
+    role,
     loading,
     configured: isSupabaseConfigured,
     signIn: signInService,

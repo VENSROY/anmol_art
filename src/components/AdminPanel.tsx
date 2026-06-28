@@ -30,7 +30,7 @@ function StatCard({ icon, value, label }: { icon: string; value: number | string
 }
 
 export default function AdminPanel() {
-  const { session, loading: authLoading, signOut } = useAuth();
+  const { session, role, loading: authLoading, signOut } = useAuth();
   const [images, setImages]         = useState<StockImage[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingImgs, setLoadingImgs] = useState(true);
@@ -130,8 +130,13 @@ export default function AdminPanel() {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="hidden sm:block text-white/30 text-xs truncate max-w-[180px]">
-            {session.user.email}
+          <span className="hidden sm:flex flex-col items-end leading-tight max-w-[200px]">
+            <span className="text-white/40 text-xs truncate max-w-[200px]">{session.user.email}</span>
+            {role && (
+              <span className="text-royal-gold/70 text-[10px] uppercase tracking-widest">
+                {role.replace("_", " ")}
+              </span>
+            )}
           </span>
           <a
             href="/"

@@ -7,7 +7,7 @@ leaves the app in a working state.
 |-------|------|--------|
 | 0 | Stabilize: `/admin` 404 fix, auth resilience, apply base migration | ✅ code done; DB hand-off pending |
 | 1 | Foundation refactor: services, hooks, context, React Query, constants, types | ✅ built, type-checked |
-| 2 | RBAC + `profiles` + versioned migrations + access-token hook | ⏳ next |
+| 2 | RBAC + `profiles` + versioned migrations | ✅ code+migrations done; apply pending auth |
 | 3 | Products + Categories + Collections + Media Library | — |
 | 4 | User Management + Activity Logs | — |
 | 5 | SEO management + dynamic sitemap | — |

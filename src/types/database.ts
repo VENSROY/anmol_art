@@ -60,6 +60,17 @@ export interface ContactSubmission {
   created_at: string;
 }
 
+/** A user account profile holding the RBAC role. */
+export interface Profile {
+  id: string;
+  email: string | null;
+  full_name: string;
+  role: "super_admin" | "admin" | "content_manager" | "viewer";
+  disabled: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 /** Key-value store backing all editable site-wide settings. */
 export type SiteConfig = Record<string, string>;
 
