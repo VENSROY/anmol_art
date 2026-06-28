@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { supabase } from "../../lib/supabase";
+import {
+  createCategory,
+  deleteCategory,
+  countImagesInCategory,
+} from "../../services/categories.service";
 import type { Category, ToastState } from "./types";
 
 interface Props {
@@ -23,40 +27,36 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
       return;
     }
     setCreating(true);
-    const { error } = await supabase.from("categories").insert({ name: trimmed });
-    setCreating(false);
-    if (error) {
-      showToast("Failed to create category: " + error.message, "error");
-    } else {
+    try {
+      await createCategory(trimmed);
       showToast(`✅ Category "${trimmed}" created!`);
       setNewName("");
       onCategoriesChange();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to create category";
+      showToast("Failed to create category: " + msg, "error");
     }
+    setCreating(false);
   };
 
   const handleDelete = async (cat: Category) => {
     setDeletingId(cat.id);
-    // Check if images exist in this category
-    const { count } = await supabase
-      .from("stock_images")
-      .select("id", { count: "exact", head: true })
-      .eq("category", cat.name);
-
-    if ((count ?? 0) > 0) {
-      showToast(`Cannot delete — ${count} image(s) use this category.`, "error");
-      setDeletingId(null);
-      setConfirmId(null);
-      return;
-    }
-
-    const { error } = await supabase.from("categories").delete().eq("id", cat.id);
-    setDeletingId(null);
-    setConfirmId(null);
-    if (error) {
-      showToast("Failed to delete: " + error.message, "error");
-    } else {
+    try {
+      // Block deletion while images still reference this category.
+      const count = await countImagesInCategory(cat.name);
+      if (count > 0) {
+        showToast(`Cannot delete — ${count} image(s) use this category.`, "error");
+        return;
+      }
+      await deleteCategory(cat.id);
       showToast(`🗑️ Category "${cat.name}" deleted.`);
       onCategoriesChange();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to delete";
+      showToast("Failed to delete: " + msg, "error");
+    } finally {
+      setDeletingId(null);
+      setConfirmId(null);
     }
   };
 

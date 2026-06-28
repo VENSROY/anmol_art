@@ -1,60 +1,17 @@
 // ── Shared admin types ────────────────────────────────────────────────────────
+// Database row types now live in src/types/database.ts (single source of truth).
+// Re-exported here for backwards compatibility with existing admin imports.
 
-export interface StockImage {
-  id: string;
-  url: string;
-  category: string;
-  label: string;
-  created_at: string;
-}
+export type {
+  StockImage,
+  Category,
+  HeroSlide,
+  Service,
+  FAQ,
+  ContactSubmission,
+  SiteConfig,
+  ContactSubmissionInput,
+} from "../../types/database";
 
-export interface Category {
-  id: string;
-  name: string;
-  created_at: string;
-}
-
-export interface HeroSlide {
-  id: string;
-  title: string;
-  subtitle: string;
-  tag: string;
-  image_url: string;
-  display_order: number;
-  active: boolean;
-  created_at: string;
-}
-
-export interface Service {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  category: string;
-  display_order: number;
-  active: boolean;
-  created_at: string;
-}
-
-export interface FAQ {
-  id: string;
-  question: string;
-  answer: string;
-  display_order: number;
-  active: boolean;
-  created_at: string;
-}
-
-export interface ContactSubmission {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-  read: boolean;
-  created_at: string;
-}
-
-export type SiteConfig = Record<string, string>;
-
+// UI-only state for the toast notification system.
 export type ToastState = { message: string; type: "success" | "error" | "info" };

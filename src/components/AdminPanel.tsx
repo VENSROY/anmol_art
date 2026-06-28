@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase, isSupabaseConfigured } from "../lib/supabase";
-import type { Session } from "@supabase/supabase-js";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { useAuth } from "../context/AuthContext";
+import { listCategories } from "../services/categories.service";
+import { listAllStockImages } from "../services/stockImages.service";
+import { countUnreadSubmissions } from "../services/contactSubmissions.service";
 
 import AdminLogin      from "./admin/AdminLogin";
 import Toast           from "./admin/Toast";
@@ -27,51 +30,13 @@ function StatCard({ icon, value, label }: { icon: string; value: number | string
 }
 
 export default function AdminPanel() {
-  const [session, setSession]   = useState<Session | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const { session, loading: authLoading, signOut } = useAuth();
   const [images, setImages]         = useState<StockImage[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingImgs, setLoadingImgs] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
   const [activeTab, setActiveTab]   = useState<Tab>("gallery");
   const [toast, setToast]           = useState<ToastState>({ message: "", type: "success" });
-
-  // ── Auth: listen for session changes ───────────────────────────────────────
-  useEffect(() => {
-    let active = true;
-
-    // If Supabase isn't configured we can't authenticate at all — surface the
-    // login screen rather than spinning forever.
-    if (!isSupabaseConfigured) {
-      setAuthLoading(false);
-      return;
-    }
-
-    supabase.auth
-      .getSession()
-      .then(({ data: { session: s } }) => {
-        if (active) setSession(s);
-      })
-      .catch(async (err) => {
-        // A corrupt/stale token in localStorage can reject getSession and leave
-        // the panel stuck on its loading screen. Clear it and fall back to login.
-        console.error("[AdminPanel] getSession failed — clearing stale session", err);
-        try { await supabase.auth.signOut(); } catch { /* ignore */ }
-        if (active) setSession(null);
-      })
-      .finally(() => {
-        if (active) setAuthLoading(false);
-      });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
-      if (active) setSession(s);
-    });
-
-    return () => {
-      active = false;
-      subscription.unsubscribe();
-    };
-  }, []);
 
   const showToast = useCallback((message: string, type: ToastState["type"] = "success") => {
     setToast({ message, type });
@@ -80,27 +45,31 @@ export default function AdminPanel() {
 
   const fetchCategories = useCallback(async () => {
     if (!isSupabaseConfigured) return;
-    const { data, error } = await supabase
-      .from("categories").select("*").order("created_at", { ascending: true });
-    if (!error) setCategories(data || []);
+    try {
+      setCategories(await listCategories());
+    } catch (err) {
+      console.error("[AdminPanel] failed to load categories", err);
+    }
   }, []);
 
   const fetchImages = useCallback(async () => {
     if (!isSupabaseConfigured) { setLoadingImgs(false); return; }
     setLoadingImgs(true);
-    const { data, error } = await supabase
-      .from("stock_images").select("*").order("created_at", { ascending: false });
-    if (!error) setImages(data || []);
+    try {
+      setImages(await listAllStockImages());
+    } catch (err) {
+      console.error("[AdminPanel] failed to load images", err);
+    }
     setLoadingImgs(false);
   }, []);
 
   const fetchUnread = useCallback(async () => {
     if (!isSupabaseConfigured) return;
-    const { count } = await supabase
-      .from("contact_submissions")
-      .select("id", { count: "exact", head: true })
-      .eq("read", false);
-    setUnreadCount(count ?? 0);
+    try {
+      setUnreadCount(await countUnreadSubmissions());
+    } catch (err) {
+      console.error("[AdminPanel] failed to load unread count", err);
+    }
   }, []);
 
   useEffect(() => {
@@ -112,7 +81,7 @@ export default function AdminPanel() {
   }, [session, fetchCategories, fetchImages, fetchUnread]);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut();
   };
 
   // ── Loading auth state ──────────────────────────────────────────────────────

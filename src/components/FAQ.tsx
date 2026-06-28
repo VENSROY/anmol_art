@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { listActiveFaqs } from "../services/faqs.service";
 import type { FAQ as FAQItem } from "./admin/types";
 
 const FALLBACK_FAQS: FAQItem[] = [
@@ -31,14 +32,11 @@ export default function FAQ() {
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
-    supabase
-      .from("faqs")
-      .select("*")
-      .eq("active", true)
-      .order("display_order", { ascending: true })
-      .then(({ data }) => {
-        if (data && data.length > 0) setFaqs(data);
-      });
+    listActiveFaqs()
+      .then((data) => {
+        if (data.length > 0) setFaqs(data);
+      })
+      .catch((err) => console.error("[FAQ] failed to load faqs", err));
   }, []);
 
   return (

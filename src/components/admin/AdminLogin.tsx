@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { supabase } from "../../lib/supabase";
+import { useAuth } from "../../context/AuthContext";
 
 interface Props {
   onLogin: () => void;
 }
 
 export default function AdminLogin({ onLogin }: Props) {
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [pass, setPass]   = useState("");
   const [error, setError] = useState("");
@@ -18,16 +19,12 @@ export default function AdminLogin({ onLogin }: Props) {
     setBusy(true);
     setError("");
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password: pass,
-    });
-
-    if (authError) {
+    try {
+      await signIn(email, pass);
+      onLogin();
+    } catch {
       setError("Invalid credentials. Please try again.");
       setTimeout(() => setError(""), 3000);
-    } else {
-      onLogin();
     }
     setBusy(false);
   };

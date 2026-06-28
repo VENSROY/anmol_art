@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { listCategories } from "../services/categories.service";
+import { listStockImagesPage } from "../services/stockImages.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
 import type { StockImage, Category } from "./admin/types";
-
-const PAGE_SIZE = 48;
 
 export default function Stock() {
   const { category: urlCategory } = useParams<{ category?: string }>();
@@ -38,11 +38,9 @@ export default function Stock() {
   // Fetch categories once
   useEffect(() => {
     if (!isSupabaseConfigured) return;
-    supabase
-      .from("categories")
-      .select("*")
-      .order("created_at", { ascending: true })
-      .then(({ data }) => setCategories(data || []));
+    listCategories()
+      .then(setCategories)
+      .catch((err) => console.error("[Stock] failed to load categories", err));
   }, []);
 
   // Fetch images (with pagination)
@@ -54,21 +52,12 @@ export default function Stock() {
     if (currentPage === 0) setLoading(true);
     else setLoadingMore(true);
 
-    let query = supabase
-      .from("stock_images")
-      .select("*", { count: "exact" })
-      .order("created_at", { ascending: false })
-      .range(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE - 1);
-
-    if (currentFilter !== "All") {
-      query = query.eq("category", currentFilter);
-    }
-
-    const { data, count, error } = await query;
-
-    if (!error) {
-      setImages((prev) => append ? [...prev, ...(data || [])] : (data || []));
-      setHasMore((count ?? 0) > (currentPage + 1) * PAGE_SIZE);
+    try {
+      const { images: pageImages, hasMore: more } = await listStockImagesPage(currentPage, currentFilter);
+      setImages((prev) => append ? [...prev, ...pageImages] : pageImages);
+      setHasMore(more);
+    } catch (err) {
+      console.error("[Stock] failed to load images", err);
     }
 
     if (currentPage === 0) setLoading(false);

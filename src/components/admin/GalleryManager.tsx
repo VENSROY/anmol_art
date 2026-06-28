@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../../lib/supabase";
+import { deleteStockImage, updateStockImage } from "../../services/stockImages.service";
 import { Category, StockImage, ToastState } from "./types";
 
 interface Props {
@@ -27,11 +27,7 @@ export default function GalleryManager({ images, categories, loading, onRefresh,
   const handleDelete = async (img: StockImage) => {
     setDeletingId(img.id);
     try {
-      const parts = img.url.split("/stock-images/");
-      if (parts[1]) {
-        await supabase.storage.from("stock-images").remove([decodeURIComponent(parts[1])]);
-      }
-      await supabase.from("stock_images").delete().eq("id", img.id);
+      await deleteStockImage(img);
       showToast("🗑️ Image deleted!");
       onRefresh();
     } catch (err: unknown) {
@@ -52,18 +48,16 @@ export default function GalleryManager({ images, categories, loading, onRefresh,
   const saveEdit = async () => {
     if (!editingImg) return;
     setSaving(true);
-    const { error } = await supabase
-      .from("stock_images")
-      .update({ label: editLabel, category: editCat })
-      .eq("id", editingImg.id);
-    setSaving(false);
-    if (error) {
-      showToast("Update failed: " + error.message, "error");
-    } else {
+    try {
+      await updateStockImage(editingImg.id, { label: editLabel, category: editCat });
       showToast("✅ Image updated!");
       setEditingImg(null);
       onRefresh();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Update failed";
+      showToast("Update failed: " + msg, "error");
     }
+    setSaving(false);
   };
 
   return (

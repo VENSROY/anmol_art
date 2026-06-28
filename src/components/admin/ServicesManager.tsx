@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "../../lib/supabase";
+import {
+  listServices,
+  createService,
+  updateService,
+  deleteService,
+} from "../../services/services.service";
 import type { Service, ToastState } from "./types";
 
 interface Props {
@@ -27,8 +32,11 @@ export default function ServicesManager({ showToast }: Props) {
 
   const fetch = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase.from("services").select("*").order("display_order");
-    if (!error) setServices(data || []);
+    try {
+      setServices(await listServices());
+    } catch (err) {
+      console.error("[ServicesManager] failed to load services", err);
+    }
     setLoading(false);
   }, []);
 
@@ -54,26 +62,37 @@ export default function ServicesManager({ showToast }: Props) {
       return;
     }
     setSaving(true);
-    if (editing) {
-      const { error } = await supabase.from("services").update(form).eq("id", editing.id);
-      if (error) showToast("Update failed: " + error.message, "error");
-      else { showToast("Service updated!"); cancel(); fetch(); }
-    } else {
-      const { error } = await supabase.from("services").insert(form);
-      if (error) showToast("Create failed: " + error.message, "error");
-      else { showToast("Service created!"); cancel(); fetch(); }
+    try {
+      if (editing) {
+        await updateService(editing.id, form);
+        showToast("Service updated!");
+      } else {
+        await createService(form);
+        showToast("Service created!");
+      }
+      cancel();
+      fetch();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Save failed";
+      showToast((editing ? "Update failed: " : "Create failed: ") + msg, "error");
     }
     setSaving(false);
   };
 
   const remove = async (id: string) => {
-    const { error } = await supabase.from("services").delete().eq("id", id);
-    if (error) showToast("Delete failed: " + error.message, "error");
-    else { showToast("Service deleted."); setConfirmId(null); fetch(); }
+    try {
+      await deleteService(id);
+      showToast("Service deleted.");
+      setConfirmId(null);
+      fetch();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Delete failed";
+      showToast("Delete failed: " + msg, "error");
+    }
   };
 
   const toggleActive = async (s: Service) => {
-    await supabase.from("services").update({ active: !s.active }).eq("id", s.id);
+    await updateService(s.id, { active: !s.active });
     fetch();
   };
 

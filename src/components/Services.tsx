@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { listActiveServices } from "../services/services.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
 import type { Service } from "./admin/types";
 
@@ -16,14 +17,11 @@ export default function Services() {
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
-    supabase
-      .from("services")
-      .select("*")
-      .eq("active", true)
-      .order("display_order", { ascending: true })
-      .then(({ data }) => {
-        if (data && data.length > 0) setServices(data);
-      });
+    listActiveServices()
+      .then((data) => {
+        if (data.length > 0) setServices(data);
+      })
+      .catch((err) => console.error("[Services] failed to load services", err));
   }, []);
 
   const waNumber = get("whatsapp_number");

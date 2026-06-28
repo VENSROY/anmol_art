@@ -1,8 +1,13 @@
-import { useState, useEffect } from "react";
-import { supabase, isSupabaseConfigured } from "../lib/supabase";
-import type { SiteConfig } from "../components/admin/types";
+import { useQuery } from "@tanstack/react-query";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { getSiteConfig } from "../services/siteConfig.service";
+import { queryClient } from "../api/queryClient";
+import { queryKeys } from "../constants/queryKeys";
+import type { SiteConfig } from "../types/database";
 
-// Hardcoded fallbacks so the site works even without DB config
+// Hardcoded fallbacks so the site renders correctly even before the DB is
+// configured or while the first fetch is in flight. These mirror the seed values
+// in the migration and the real business information — never blank.
 const DEFAULTS: SiteConfig = {
   phone:              "+91 98280 37575",
   whatsapp_number:    "919828037575",
@@ -27,53 +32,32 @@ const DEFAULTS: SiteConfig = {
   collections_quote_desc: "Can't find exactly what you're looking for? Our master artisans specialize in bespoke designs tailored to your specific space and style.",
 };
 
-// Module-level cache so all components share one fetch
-let cached: SiteConfig | null = null;
-let fetchPromise: Promise<SiteConfig> | null = null;
-
-async function loadConfig(): Promise<SiteConfig> {
-  if (cached) return cached;
-  if (fetchPromise) return fetchPromise;
-
-  fetchPromise = (async () => {
-    if (!isSupabaseConfigured) return { ...DEFAULTS };
-    const { data, error } = await supabase.from("site_config").select("key, value");
-    if (error || !data) return { ...DEFAULTS };
-    const map: SiteConfig = { ...DEFAULTS };
-    data.forEach((row: { key: string; value: string }) => {
-      if (row.value) map[row.key] = row.value;
-    });
-    cached = map;
-    return map;
-  })();
-
-  return fetchPromise;
+/** Merge DB values over defaults so a missing key always falls back gracefully. */
+function mergeWithDefaults(data: SiteConfig): SiteConfig {
+  const map: SiteConfig = { ...DEFAULTS };
+  for (const [key, value] of Object.entries(data)) {
+    if (value) map[key] = value;
+  }
+  return map;
 }
 
-// Invalidate cache when admin updates settings
+/** Call after an admin saves settings to refresh every consumer. */
 export function invalidateSiteConfig() {
-  cached = null;
-  fetchPromise = null;
+  queryClient.invalidateQueries({ queryKey: queryKeys.siteConfig });
 }
 
 export function useSiteConfig() {
-  const [config, setConfig] = useState<SiteConfig>(DEFAULTS);
-  const [loading, setLoading] = useState(!cached);
+  const { data, isLoading } = useQuery({
+    queryKey: queryKeys.siteConfig,
+    queryFn: getSiteConfig,
+    enabled: isSupabaseConfigured,
+    select: mergeWithDefaults,
+  });
 
-  useEffect(() => {
-    let cancelled = false;
-    loadConfig().then((c) => {
-      if (!cancelled) {
-        setConfig(c);
-        setLoading(false);
-      }
-    });
-    return () => { cancelled = true; };
-  }, []);
+  const config = data ?? DEFAULTS;
 
-  // Helper to get a value with fallback
   const get = (key: string, fallback?: string): string =>
     config[key] ?? fallback ?? DEFAULTS[key] ?? "";
 
-  return { config, get, loading };
+  return { config, get, loading: isLoading };
 }

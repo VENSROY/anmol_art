@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { supabase } from "../../lib/supabase";
+import { addStockImage } from "../../services/stockImages.service";
 import type { Category, ToastState } from "./types";
 
 interface Props {
@@ -54,24 +54,11 @@ export default function UploadSection({ categories, onUploaded, showToast }: Pro
 
     for (const { file } of previews) {
       try {
-        const ext      = file.name.split(".").pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-        const path     = `${activeCategory}/${fileName}`;
-
-        const { error: upErr } = await supabase.storage
-          .from("stock-images")
-          .upload(path, file, { cacheControl: "3600", upsert: false });
-        if (upErr) throw upErr;
-
-        const { data: urlData } = supabase.storage.from("stock-images").getPublicUrl(path);
-
-        const { error: dbErr } = await supabase.from("stock_images").insert({
-          url:      urlData.publicUrl,
+        await addStockImage({
+          file,
           category: activeCategory,
-          label:    label || file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " "),
+          label: label || file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " "),
         });
-        if (dbErr) throw dbErr;
-
         success++;
       } catch (err: unknown) {
         failed++;

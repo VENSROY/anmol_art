@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "../../lib/supabase";
+import { getSiteConfig, saveSiteConfig } from "../../services/siteConfig.service";
+import { invalidateSiteConfig } from "../../hooks/useSiteConfig";
 import type { SiteConfig, ToastState } from "./types";
 
 interface Props {
@@ -80,11 +81,10 @@ export default function SiteSettingsManager({ showToast }: Props) {
 
   const fetchConfig = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase.from("site_config").select("key, value");
-    if (!error && data) {
-      const map: SiteConfig = {};
-      data.forEach((row: { key: string; value: string }) => { map[row.key] = row.value; });
-      setConfig(map);
+    try {
+      setConfig(await getSiteConfig());
+    } catch (err) {
+      console.error("[SiteSettingsManager] failed to load config", err);
     }
     setLoading(false);
   }, []);
@@ -99,19 +99,19 @@ export default function SiteSettingsManager({ showToast }: Props) {
   const saveAll = async () => {
     if (dirty.size === 0) return;
     setSaving(true);
-    const upserts = Array.from(dirty).map((key) => ({
-      key,
-      value: config[key] ?? "",
-      updated_at: new Date().toISOString(),
-    }));
-    const { error } = await supabase.from("site_config").upsert(upserts, { onConflict: "key" });
-    setSaving(false);
-    if (error) {
-      showToast("Save failed: " + error.message, "error");
-    } else {
+    const changed: Record<string, string> = {};
+    dirty.forEach((key) => { changed[key] = config[key] ?? ""; });
+    try {
+      await saveSiteConfig(changed);
+      // Refresh the live public site so edits appear without a hard reload.
+      invalidateSiteConfig();
       showToast(`Saved ${dirty.size} setting(s)!`);
       setDirty(new Set());
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Save failed";
+      showToast("Save failed: " + msg, "error");
     }
+    setSaving(false);
   };
 
   return (

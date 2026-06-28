@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "../../lib/supabase";
+import {
+  listHeroSlides,
+  createHeroSlide,
+  updateHeroSlide,
+  deleteHeroSlide,
+} from "../../services/heroSlides.service";
+import { buildObjectPath, uploadImage } from "../../services/storage.service";
 import type { HeroSlide, ToastState } from "./types";
 
 interface Props {
@@ -27,11 +33,11 @@ export default function HeroManager({ showToast }: Props) {
 
   const fetch = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("hero_slides")
-      .select("*")
-      .order("display_order", { ascending: true });
-    if (!error) setSlides(data || []);
+    try {
+      setSlides(await listHeroSlides());
+    } catch (err) {
+      console.error("[HeroManager] failed to load slides", err);
+    }
     setLoading(false);
   }, []);
 
@@ -58,18 +64,16 @@ export default function HeroManager({ showToast }: Props) {
 
   const handleImageUpload = async (file: File) => {
     setUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `hero/${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("stock-images").upload(path, file, { upsert: true });
-    if (error) {
-      showToast("Image upload failed: " + error.message, "error");
-      setUploading(false);
-      return;
+    try {
+      const path = buildObjectPath("hero", file.name);
+      const url = await uploadImage(path, file, { upsert: true });
+      setForm((f) => ({ ...f, image_url: url }));
+      showToast("Image uploaded!");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Upload failed";
+      showToast("Image upload failed: " + msg, "error");
     }
-    const { data } = supabase.storage.from("stock-images").getPublicUrl(path);
-    setForm((f) => ({ ...f, image_url: data.publicUrl }));
     setUploading(false);
-    showToast("Image uploaded!");
   };
 
   const save = async () => {
@@ -78,26 +82,38 @@ export default function HeroManager({ showToast }: Props) {
       return;
     }
     setSaving(true);
-    if (editing) {
-      const { error } = await supabase.from("hero_slides").update(form).eq("id", editing.id);
-      if (error) { showToast("Update failed: " + error.message, "error"); }
-      else { showToast("Slide updated!"); setEditing(null); setShowForm(false); fetch(); }
-    } else {
-      const { error } = await supabase.from("hero_slides").insert(form);
-      if (error) { showToast("Create failed: " + error.message, "error"); }
-      else { showToast("Slide created!"); setShowForm(false); fetch(); }
+    try {
+      if (editing) {
+        await updateHeroSlide(editing.id, form);
+        showToast("Slide updated!");
+        setEditing(null);
+      } else {
+        await createHeroSlide(form);
+        showToast("Slide created!");
+      }
+      setShowForm(false);
+      fetch();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Save failed";
+      showToast((editing ? "Update failed: " : "Create failed: ") + msg, "error");
     }
     setSaving(false);
   };
 
   const remove = async (id: string) => {
-    const { error } = await supabase.from("hero_slides").delete().eq("id", id);
-    if (error) { showToast("Delete failed: " + error.message, "error"); setConfirmId(null); }
-    else { showToast("Slide deleted."); setConfirmId(null); fetch(); }
+    try {
+      await deleteHeroSlide(id);
+      showToast("Slide deleted.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Delete failed";
+      showToast("Delete failed: " + msg, "error");
+    }
+    setConfirmId(null);
+    fetch();
   };
 
   const toggleActive = async (slide: HeroSlide) => {
-    await supabase.from("hero_slides").update({ active: !slide.active }).eq("id", slide.id);
+    await updateHeroSlide(slide.id, { active: !slide.active });
     fetch();
   };
 

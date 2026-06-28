@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "../../lib/supabase";
+import {
+  listContactSubmissions,
+  setSubmissionRead,
+  deleteSubmission,
+} from "../../services/contactSubmissions.service";
 import type { ContactSubmission, ToastState } from "./types";
 
 interface Props {
@@ -15,25 +19,31 @@ export default function InquiriesManager({ showToast }: Props) {
 
   const fetch = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("contact_submissions")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (!error) setSubmissions(data || []);
+    try {
+      setSubmissions(await listContactSubmissions());
+    } catch (err) {
+      console.error("[InquiriesManager] failed to load submissions", err);
+    }
     setLoading(false);
   }, []);
 
   useEffect(() => { fetch(); }, [fetch]);
 
   const markRead = async (id: string, read: boolean) => {
-    await supabase.from("contact_submissions").update({ read }).eq("id", id);
+    await setSubmissionRead(id, read);
     setSubmissions((subs) => subs.map((s) => s.id === id ? { ...s, read } : s));
   };
 
   const remove = async (id: string) => {
-    const { error } = await supabase.from("contact_submissions").delete().eq("id", id);
-    if (error) showToast("Delete failed: " + error.message, "error");
-    else { showToast("Inquiry deleted."); setConfirmId(null); setSubmissions((subs) => subs.filter((s) => s.id !== id)); }
+    try {
+      await deleteSubmission(id);
+      showToast("Inquiry deleted.");
+      setConfirmId(null);
+      setSubmissions((subs) => subs.filter((s) => s.id !== id));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Delete failed";
+      showToast("Delete failed: " + msg, "error");
+    }
   };
 
   const filtered = submissions.filter((s) => {

@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase } from "../../lib/supabase";
+import {
+  listFaqs,
+  createFaq,
+  updateFaq,
+  deleteFaq,
+} from "../../services/faqs.service";
 import type { FAQ, ToastState } from "./types";
 
 interface Props {
@@ -21,8 +26,11 @@ export default function FAQManager({ showToast }: Props) {
 
   const fetch = useCallback(async () => {
     setLoading(true);
-    const { data, error } = await supabase.from("faqs").select("*").order("display_order");
-    if (!error) setFaqs(data || []);
+    try {
+      setFaqs(await listFaqs());
+    } catch (err) {
+      console.error("[FAQManager] failed to load faqs", err);
+    }
     setLoading(false);
   }, []);
 
@@ -48,26 +56,37 @@ export default function FAQManager({ showToast }: Props) {
       return;
     }
     setSaving(true);
-    if (editing) {
-      const { error } = await supabase.from("faqs").update(form).eq("id", editing.id);
-      if (error) showToast("Update failed: " + error.message, "error");
-      else { showToast("FAQ updated!"); cancel(); fetch(); }
-    } else {
-      const { error } = await supabase.from("faqs").insert(form);
-      if (error) showToast("Create failed: " + error.message, "error");
-      else { showToast("FAQ created!"); cancel(); fetch(); }
+    try {
+      if (editing) {
+        await updateFaq(editing.id, form);
+        showToast("FAQ updated!");
+      } else {
+        await createFaq(form);
+        showToast("FAQ created!");
+      }
+      cancel();
+      fetch();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Save failed";
+      showToast((editing ? "Update failed: " : "Create failed: ") + msg, "error");
     }
     setSaving(false);
   };
 
   const remove = async (id: string) => {
-    const { error } = await supabase.from("faqs").delete().eq("id", id);
-    if (error) showToast("Delete failed: " + error.message, "error");
-    else { showToast("FAQ deleted."); setConfirmId(null); fetch(); }
+    try {
+      await deleteFaq(id);
+      showToast("FAQ deleted.");
+      setConfirmId(null);
+      fetch();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Delete failed";
+      showToast("Delete failed: " + msg, "error");
+    }
   };
 
   const toggleActive = async (f: FAQ) => {
-    await supabase.from("faqs").update({ active: !f.active }).eq("id", f.id);
+    await updateFaq(f.id, { active: !f.active });
     fetch();
   };
 

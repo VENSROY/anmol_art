@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { listCategories } from "../services/categories.service";
+import { getCategoryImageCounts } from "../services/stockImages.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
 import type { Category } from "./admin/types";
 
@@ -41,21 +43,16 @@ export default function Collections() {
       return;
     }
     const load = async () => {
-      // Fetch categories and image counts together
-      const [catRes, imgRes] = await Promise.all([
-        supabase.from("categories").select("*").order("created_at", { ascending: true }),
-        supabase.from("stock_images").select("category"),
-      ]);
-
-      const cats: Category[] = catRes.data || [];
-      const imgs = imgRes.data || [];
-
-      const countMap: Record<string, number> = {};
-      imgs.forEach((img: { category: string }) => {
-        countMap[img.category] = (countMap[img.category] || 0) + 1;
-      });
-
-      setCategories(cats.map((c) => ({ ...c, count: countMap[c.name] || 0 })));
+      try {
+        // Fetch categories and image counts together
+        const [cats, countMap] = await Promise.all([
+          listCategories(),
+          getCategoryImageCounts(),
+        ]);
+        setCategories(cats.map((c) => ({ ...c, count: countMap[c.name] || 0 })));
+      } catch (err) {
+        console.error("[Collections] failed to load categories", err);
+      }
       setLoading(false);
     };
     load();

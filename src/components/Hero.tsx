@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { listActiveHeroSlides } from "../services/heroSlides.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
 import type { HeroSlide } from "./admin/types";
 
@@ -25,16 +26,14 @@ export default function Hero() {
   // Fetch slides from DB; keep static fallbacks while loading or if none exist
   useEffect(() => {
     if (!isSupabaseConfigured) return;
-    supabase
-      .from("hero_slides")
-      .select("*")
-      .eq("active", true)
-      .order("display_order", { ascending: true })
-      .then(({ data }) => {
-        // Only use DB slides if they have an image_url set
-        const withImages = (data || []).filter((s: HeroSlide) => s.image_url);
+    listActiveHeroSlides()
+      .then((data) => {
+        // Only use DB slides that actually have an image set; otherwise keep
+        // the static fallbacks so the hero is never blank.
+        const withImages = data.filter((s) => s.image_url);
         if (withImages.length > 0) setSlides(withImages);
-      });
+      })
+      .catch((err) => console.error("[Hero] failed to load slides", err));
   }, []);
 
   const nextSlide = useCallback(

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
-import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { isSupabaseConfigured } from "../lib/supabase";
+import { createContactSubmission } from "../services/contactSubmissions.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
 
 interface FormState {
@@ -37,19 +38,13 @@ export default function Contact() {
       return;
     }
 
-    const { error } = await supabase.from("contact_submissions").insert({
-      name: form.name.trim(),
-      email: form.email.trim(),
-      phone: form.phone.trim(),
-      message: form.message.trim(),
-    });
-
-    if (error) {
-      setStatus("error");
-      setErrMsg("Submission failed. Please try WhatsApp or email directly.");
-    } else {
+    try {
+      await createContactSubmission(form);
       setStatus("success");
       setForm(EMPTY_FORM);
+    } catch {
+      setStatus("error");
+      setErrMsg("Submission failed. Please try WhatsApp or email directly.");
     }
   };
 
