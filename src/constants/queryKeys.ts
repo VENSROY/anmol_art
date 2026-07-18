@@ -14,7 +14,11 @@ export const queryKeys = {
     all: ["stock-images"] as const,
     list: (filter: string, page: number) =>
       ["stock-images", { filter, page }] as const,
+    counts: ["stock-images", "category-counts"] as const,
   },
+
+  /** Curated homepage teaser (see GalleryPreview). */
+  stockPreview: (limit: number) => ["stock-images", "preview", limit] as const,
 
   heroSlides: ["hero-slides"] as const,
   services: ["services"] as const,

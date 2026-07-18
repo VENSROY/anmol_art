@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from "react-router-dom";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -9,6 +10,8 @@ import FAQ from "./components/FAQ";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import WhatsAppFloat from "./components/WhatsAppFloat";
+import GalleryPreview from "./components/GalleryPreview";
+import GrainOverlay from "./components/motion/GrainOverlay";
 
 // ── Lazy-loaded heavy routes ──────────────────────────────────────────────────
 const Stock      = lazy(() => import("./components/Stock"));
@@ -46,31 +49,44 @@ function NotFound() {
 }
 
 // ── Home page (all sections) ──────────────────────────────────────────────────
+// NOTE: each section owns its own `id` + `scroll-mt-*` offset, so no wrapper
+// divs here — duplicating the ids would shadow those scroll offsets and push
+// headings under the sticky navbar.
 function Home() {
   return (
     <>
       <Hero />
-      <div id="about"><About /></div>
-      <div id="collection"><Collections /></div>
-      <div id="stock">
-        <Suspense fallback={<PageLoader />}>
-          <Stock />
-        </Suspense>
-      </div>
-      <div id="services"><Services /></div>
+      <About />
+      <Collections />
+      <GalleryPreview />
+      <Services />
       <FAQ />
-      <div id="contact"><Contact /></div>
+      <Contact />
     </>
   );
 }
 
 /** Shared layout wrapper for all public pages */
 function PublicLayout() {
+  const location = useLocation();
+  const reduceMotion = useReducedMotion();
+
   return (
     <div className="bg-ivory text-earthy-brown overflow-x-hidden min-h-screen flex flex-col">
+      <GrainOverlay />
       <Navbar />
       <main className="flex-grow" id="main-content">
-        <Outlet />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: reduceMotion ? 0 : -8 }}
+            transition={{ duration: reduceMotion ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
       </main>
       <Footer />
       <WhatsAppFloat />

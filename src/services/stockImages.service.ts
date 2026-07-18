@@ -45,16 +45,36 @@ export async function listStockImagesPage(
   };
 }
 
-/** Map of category name → number of images, for collection count badges. */
-export async function getCategoryImageCounts(): Promise<Record<string, number>> {
-  const { data, error } = await supabase.from("stock_images").select("category");
+export interface CategoryStat {
+  /** Number of images indexed under this category. */
+  count: number;
+  /** URL of the most recently added image, used as the collection thumbnail. */
+  thumbnail?: string;
+}
+
+/**
+ * Per-category count *and* a representative thumbnail, in a single round-trip.
+ *
+ * The `categories` table has no image column, so collection cards previously
+ * fell back to four static bundled photos. Deriving the thumbnail from the
+ * newest piece actually in that category keeps the cards honest and current.
+ */
+export async function getCategoryStats(): Promise<Record<string, CategoryStat>> {
+  const { data, error } = await supabase
+    .from("stock_images")
+    .select("category, url")
+    .order("created_at", { ascending: false });
   if (error) throw error;
 
-  const counts: Record<string, number> = {};
-  (data ?? []).forEach((row: { category: string }) => {
-    counts[row.category] = (counts[row.category] ?? 0) + 1;
+  const stats: Record<string, CategoryStat> = {};
+  (data ?? []).forEach((row: { category: string; url: string }) => {
+    const stat = stats[row.category] ?? { count: 0 };
+    stat.count += 1;
+    // Rows arrive newest-first, so the first URL seen is the freshest piece.
+    stat.thumbnail ??= row.url;
+    stats[row.category] = stat;
   });
-  return counts;
+  return stats;
 }
 
 /** Upload an image file then index it in the stock_images table. */
