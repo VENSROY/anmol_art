@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSiteConfig } from "../hooks/useSiteConfig";
+import Reveal from "./motion/Reveal";
+import SectionDivider from "./motion/SectionDivider";
 
 export default function Footer() {
   const { get } = useSiteConfig();
@@ -14,7 +16,7 @@ export default function Footer() {
   return (
     <footer className="bg-earthy-brown text-ivory pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-        <div className="flex flex-col items-center md:items-start">
+        <Reveal className="flex flex-col items-center md:items-start" y={16}>
           <h3 className="text-2xl font-serif font-bold text-royal-gold flex items-center gap-2 mb-6">
             <i className="fa-solid fa-crown" aria-hidden="true" />
             ANMOL Art
@@ -22,9 +24,9 @@ export default function Footer() {
           <p className="text-sm opacity-80 leading-relaxed text-center md:text-left">
             {footerDesc}
           </p>
-        </div>
+        </Reveal>
 
-        <div className="text-center md:text-left">
+        <Reveal className="text-center md:text-left" delay={0.08} y={16}>
           <h4 className="font-bold tracking-widest text-sm mb-6 border-b border-royal-gold/30 pb-2 w-fit mx-auto md:mx-0 uppercase">Navigation</h4>
           <ul className="space-y-3 text-[15px] font-medium">
             <li><button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-royal-gold transition">Home</button></li>
@@ -33,9 +35,9 @@ export default function Footer() {
             <li><button onClick={() => document.getElementById("services")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-royal-gold transition">Services</button></li>
             <li><button onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} className="hover:text-royal-gold transition">Contact</button></li>
           </ul>
-        </div>
+        </Reveal>
 
-        <div className="text-center md:text-left">
+        <Reveal className="text-center md:text-left" delay={0.16} y={16}>
           <h4 className="font-bold tracking-widest text-sm mb-6 border-b border-royal-gold/30 pb-2 w-fit mx-auto md:mx-0 uppercase">Contact Us</h4>
           <ul className="space-y-4 text-sm opacity-80">
             {address && (
@@ -51,9 +53,9 @@ export default function Footer() {
               </li>
             )}
           </ul>
-        </div>
+        </Reveal>
 
-        <div className="text-center md:text-left">
+        <Reveal className="text-center md:text-left" delay={0.24} y={16}>
           <h4 className="font-bold tracking-widest text-sm mb-6 border-b border-royal-gold/30 pb-2 w-fit mx-auto md:mx-0 uppercase">Connect</h4>
           <div className="flex justify-center md:justify-start gap-4">
             {instagram && (
@@ -75,8 +77,10 @@ export default function Footer() {
               </a>
             )}
           </div>
-        </div>
+        </Reveal>
       </div>
+
+      <SectionDivider className="mb-8 opacity-70" />
 
       <div className="border-t border-white/10 pt-8 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] tracking-[0.2em] opacity-50 uppercase">

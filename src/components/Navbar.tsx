@@ -69,12 +69,14 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-7 font-bold text-[13px] tracking-wider text-royal-maroon uppercase">
             {navLinks.map((item) =>
               item.link ? (
-                <Link key={item.label} to={item.link} className="hover:text-royal-gold transition">
+                <Link key={item.label} to={item.link} className="relative group/nav hover:text-royal-gold transition py-1">
                   {item.label}
+                  <span className="absolute left-0 -bottom-0.5 w-0 group-hover/nav:w-full h-[1.5px] bg-royal-gold transition-all duration-300" />
                 </Link>
               ) : (
-                <button key={item.label} onClick={item.action} className="hover:text-royal-gold transition">
+                <button key={item.label} onClick={item.action} className="relative group/nav hover:text-royal-gold transition py-1">
                   {item.label}
+                  <span className="absolute left-0 -bottom-0.5 w-0 group-hover/nav:w-full h-[1.5px] bg-royal-gold transition-all duration-300" />
                 </button>
               )
             )}

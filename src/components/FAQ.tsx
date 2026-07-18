@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { listActiveFaqs } from "../services/faqs.service";
+import Reveal from "./motion/Reveal";
 import type { FAQ as FAQItem } from "./admin/types";
 
 const FALLBACK_FAQS: FAQItem[] = [
@@ -42,37 +43,36 @@ export default function FAQ() {
   return (
     <section id="faq" className="bg-[#FBF6E6] py-32 scroll-mt-28">
       <div className="container mx-auto px-6 max-w-4xl">
-        <div className="text-center mb-20">
+        <Reveal className="text-center mb-20">
           <span className="text-royal-gold font-serif italic text-lg block mb-2">Help & Support</span>
           <h2 className="font-serif text-5xl font-bold text-royal-maroon">Common Queries</h2>
           <div className="w-16 h-1 bg-royal-gold mx-auto mt-4" />
-        </div>
+        </Reveal>
 
         <div className="space-y-4">
           {faqs.map((item, index) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-xl shadow-sm border border-royal-gold/10 overflow-hidden transition-all duration-300"
-            >
-              <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                aria-expanded={openIndex === index}
-                className="w-full flex justify-between items-center px-8 py-6 text-left group"
-              >
-                <span className={`text-lg font-bold transition-colors ${openIndex === index ? "text-royal-gold" : "text-earthy-brown group-hover:text-royal-maroon"}`}>
-                  {item.question}
-                </span>
-                <span className={`text-2xl transition-transform duration-300 flex-shrink-0 ml-4 ${openIndex === index ? "rotate-45 text-royal-gold" : "text-royal-maroon"}`}>
-                  +
-                </span>
-              </button>
+            <Reveal key={item.id} delay={index * 0.06} y={16}>
+              <div className="bg-white rounded-xl shadow-sm border border-royal-gold/10 overflow-hidden transition-all duration-300">
+                <button
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                  aria-expanded={openIndex === index}
+                  className="w-full flex justify-between items-center px-8 py-6 text-left group"
+                >
+                  <span className={`text-lg font-bold transition-colors ${openIndex === index ? "text-royal-gold" : "text-earthy-brown group-hover:text-royal-maroon"}`}>
+                    {item.question}
+                  </span>
+                  <span className={`text-2xl transition-transform duration-300 flex-shrink-0 ml-4 ${openIndex === index ? "rotate-45 text-royal-gold" : "text-royal-maroon"}`}>
+                    +
+                  </span>
+                </button>
 
-              <div className={`overflow-hidden transition-all duration-500 ${openIndex === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
-                <div className="px-8 pb-8 text-earthy-brown leading-relaxed border-t border-gray-50 pt-4">
-                  {item.answer}
+                <div className={`overflow-hidden transition-all duration-500 ${openIndex === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
+                  <div className="px-8 pb-8 text-earthy-brown leading-relaxed border-t border-gray-50 pt-4">
+                    {item.answer}
+                  </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

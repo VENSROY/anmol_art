@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { listCategories } from "../services/categories.service";
 import { listStockImagesPage } from "../services/stockImages.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
+import Reveal from "./motion/Reveal";
 import type { StockImage, Category } from "./admin/types";
 
 export default function Stock() {
   const { category: urlCategory } = useParams<{ category?: string }>();
   const { get } = useSiteConfig();
+  const reduceMotion = useReducedMotion();
 
   const [images, setImages]         = useState<StockImage[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -172,19 +175,21 @@ export default function Stock() {
         {/* ── Category Filter ── */}
         {!urlCategoryNotFound && (
           <>
-            <div className="flex flex-wrap gap-3 justify-center mb-12" role="group" aria-label="Filter by category">
-              {allFilters.map((cat) => (
-                <button key={cat} onClick={() => setFilter(cat)} aria-pressed={filter === cat}
-                  className={`px-5 py-2 text-xs font-bold uppercase tracking-widest border transition ${
-                    filter === cat
-                      ? "bg-royal-maroon text-white border-royal-maroon"
-                      : "bg-white text-royal-maroon border-royal-gold/30 hover:border-royal-maroon"
-                  }`}>
-                  {cat}
-                  <span className="ml-1.5 opacity-50">({catCount(cat)})</span>
-                </button>
-              ))}
-            </div>
+            <Reveal className="flex flex-wrap gap-3 justify-center mb-12" y={12}>
+              <div role="group" aria-label="Filter by category" className="flex flex-wrap gap-3 justify-center">
+                {allFilters.map((cat) => (
+                  <button key={cat} onClick={() => setFilter(cat)} aria-pressed={filter === cat}
+                    className={`px-5 py-2 text-xs font-bold uppercase tracking-widest border transition ${
+                      filter === cat
+                        ? "bg-royal-maroon text-white border-royal-maroon"
+                        : "bg-white text-royal-maroon border-royal-gold/30 hover:border-royal-maroon"
+                    }`}>
+                    {cat}
+                    <span className="ml-1.5 opacity-50">({catCount(cat)})</span>
+                  </button>
+                ))}
+              </div>
+            </Reveal>
 
             {/* ── Loading ── */}
             {loading && (
@@ -218,8 +223,12 @@ export default function Stock() {
               <>
                 <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 space-y-3">
                   {images.map((img, i) => (
-                    <div
+                    <motion.div
                       key={img.id}
+                      layout
+                      initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.4, delay: (i % 12) * 0.03, ease: [0.22, 1, 0.36, 1] }}
                       onClick={() => openLightbox(i)}
                       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox(i); } }}
                       role="button"
@@ -238,7 +247,7 @@ export default function Stock() {
                         <p className="text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition">{img.label}</p>
                         <p className="text-royal-gold text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition">{img.category}</p>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
 
@@ -295,54 +304,67 @@ export default function Stock() {
       </div>
 
       {/* ── Lightbox ── */}
-      {lightbox !== null && images[lightbox] && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Image: ${images[lightbox].label}`}
-          className="fixed inset-0 z-[100] bg-black/92 flex items-center justify-center p-4"
-          onClick={closeLightbox}
-        >
-          <button onClick={closeLightbox} aria-label="Close image viewer"
-            className="absolute top-5 right-5 text-white text-3xl w-10 h-10 flex items-center justify-center hover:text-royal-gold transition z-10">
-            <i className="fa-solid fa-xmark" aria-hidden="true" />
-          </button>
-          <button onClick={prevImg} aria-label="Previous image"
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition z-10">
-            <i className="fa-solid fa-chevron-left" aria-hidden="true" />
-          </button>
+      <AnimatePresence>
+        {lightbox !== null && images[lightbox] && (
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Image: ${images[lightbox].label}`}
+            className="fixed inset-0 z-[100] bg-black/92 flex items-center justify-center p-4"
+            onClick={closeLightbox}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.25 }}
+          >
+            <button onClick={closeLightbox} aria-label="Close image viewer"
+              className="absolute top-5 right-5 text-white text-3xl w-10 h-10 flex items-center justify-center hover:text-royal-gold transition z-10">
+              <i className="fa-solid fa-xmark" aria-hidden="true" />
+            </button>
+            <button onClick={prevImg} aria-label="Previous image"
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition z-10">
+              <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+            </button>
 
-          <div className="flex flex-col items-center max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={images[lightbox].url}
-              alt={images[lightbox].label}
-              className="max-h-[78vh] max-w-full object-contain rounded-xl shadow-2xl"
-            />
-            <div className="mt-4 text-center">
-              <p className="text-white font-bold text-lg">{images[lightbox].label}</p>
-              <p className="text-royal-gold text-xs uppercase tracking-widest mt-1">{images[lightbox].category}</p>
-              {waNumber && (
-                <a
-                  href={`https://wa.me/${waNumber}?text=Namaste! I'm interested in: ${encodeURIComponent(images[lightbox].label ?? "")}. Please share price and details.`}
-                  target="_blank" rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 text-sm font-bold uppercase tracking-wider hover:bg-green-500 transition rounded-full"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <i className="fa-brands fa-whatsapp" aria-hidden="true" /> Enquire on WhatsApp
-                </a>
-              )}
+            <motion.div
+              className="flex flex-col items-center max-w-4xl w-full"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: reduceMotion ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <img
+                src={images[lightbox].url}
+                alt={images[lightbox].label}
+                className="max-h-[78vh] max-w-full object-contain rounded-xl shadow-2xl"
+              />
+              <div className="mt-4 text-center">
+                <p className="text-white font-bold text-lg">{images[lightbox].label}</p>
+                <p className="text-royal-gold text-xs uppercase tracking-widest mt-1">{images[lightbox].category}</p>
+                {waNumber && (
+                  <a
+                    href={`https://wa.me/${waNumber}?text=Namaste! I'm interested in: ${encodeURIComponent(images[lightbox].label ?? "")}. Please share price and details.`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 text-sm font-bold uppercase tracking-wider hover:bg-green-500 transition rounded-full"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <i className="fa-brands fa-whatsapp" aria-hidden="true" /> Enquire on WhatsApp
+                  </a>
+                )}
+              </div>
+            </motion.div>
+
+            <button onClick={nextImg} aria-label="Next image"
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition z-10">
+              <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+            </button>
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/40 text-xs tracking-widest" aria-live="polite">
+              {lightbox + 1} / {images.length}
             </div>
-          </div>
-
-          <button onClick={nextImg} aria-label="Next image"
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition z-10">
-            <i className="fa-solid fa-chevron-right" aria-hidden="true" />
-          </button>
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/40 text-xs tracking-widest" aria-live="polite">
-            {lightbox + 1} / {images.length}
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

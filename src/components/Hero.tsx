@@ -1,14 +1,18 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { listActiveHeroSlides } from "../services/heroSlides.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
+import CursorGlow from "./motion/CursorGlow";
 import type { HeroSlide } from "./admin/types";
 
 // Static fallback slides (used when no DB slides are configured)
 import showroomImg  from "../assets/showroom.jpg";
-import craftImg     from "../assets/CRAFT.png";
-import decorImg     from "../assets/DECOR_SCULPTURES.png";
-import furnitureImg from "../assets/FURNITURE_ROYAL_WOOD_ART.png";
+import craftImg     from "../assets/CRAFT.webp";
+import decorImg     from "../assets/DECOR_SCULPTURES.webp";
+import furnitureImg from "../assets/FURNITURE_ROYAL_WOOD_ART.webp";
+
+const HeroOrnament3D = lazy(() => import("./hero/HeroOrnament3D"));
 
 const FALLBACK_SLIDES = [
   { id: "f1", title: "Timeless Artistry", subtitle: "Heritage",   tag: "Rajasthan Handicraft",   image_url: showroomImg,  display_order: 0, active: true, created_at: "" },
@@ -17,11 +21,31 @@ const FALLBACK_SLIDES = [
   { id: "f4", title: "Divine Decor",      subtitle: "Sculptures", tag: "Handcrafted Sculptures",  image_url: decorImg,     display_order: 3, active: true, created_at: "" },
 ] satisfies HeroSlide[];
 
+/** Tracks a media query for gating the desktop-only 3D ornament without ever mounting it on mobile. */
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    setMatches(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, [query]);
+  return matches;
+}
+
 export default function Hero() {
   const { get } = useSiteConfig();
   const [slides, setSlides]         = useState<HeroSlide[]>(FALLBACK_SLIDES);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded]         = useState(false);
+
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const isDesktop = useMediaQuery("(min-width: 1280px)");
+
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 120]);
 
   // Fetch slides from DB; keep static fallbacks while loading or if none exist
   useEffect(() => {
@@ -55,28 +79,42 @@ export default function Hero() {
 
   return (
     <section
+      ref={sectionRef}
       id="home"
       aria-label="ANMOL Art – Handcrafted Indian Furniture & Decor from Jodhpur, Rajasthan"
       className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden group"
     >
-      {/* Slides */}
-      {slides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
-        >
+      {/* Slides (parallax layer) */}
+      <motion.div className="absolute inset-0" style={{ y: bgY }}>
+        {slides.map((slide, index) => (
           <div
-            className={`absolute inset-0 bg-cover bg-center ${index === currentSlide ? "animate-kenburns" : ""}`}
-            style={{
-              backgroundImage: `linear-gradient(160deg, rgba(0,0,0,0.72) 0%, rgba(93,0,30,0.55) 100%), url(${slide.image_url})`,
-            }}
-          />
-        </div>
-      ))}
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
+          >
+            <div
+              className={`absolute inset-0 bg-cover bg-center ${index === currentSlide ? "animate-kenburns" : ""}`}
+              style={{
+                backgroundImage: `linear-gradient(160deg, rgba(0,0,0,0.72) 0%, rgba(93,0,30,0.55) 100%), url(${slide.image_url})`,
+              }}
+            />
+          </div>
+        ))}
+      </motion.div>
+
+      <CursorGlow className="z-[15]" />
 
       <div className="absolute inset-6 md:inset-10 border border-white/10 z-20 pointer-events-none rounded-sm hidden md:block" />
+
+      {/* Floating decorative 3D ornament — desktop only, lazy-loaded, silently disabled if unsupported */}
+      {isDesktop && !reduceMotion && (
+        <div className="absolute right-[3%] top-1/2 -translate-y-1/2 w-[420px] h-[420px] z-20 opacity-90 pointer-events-none">
+          <Suspense fallback={null}>
+            <HeroOrnament3D />
+          </Suspense>
+        </div>
+      )}
 
       {/* Content */}
       <div className={`relative z-20 text-center max-w-5xl px-6 pt-24 pb-48 md:pb-40 transition-all duration-1000 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
@@ -85,37 +123,54 @@ export default function Hero() {
           {get("hero_badge")}
         </span>
 
-        <h1 className="font-serif text-white text-5xl md:text-8xl font-bold leading-[1.05] drop-shadow-2xl mb-6">
-          {current.title}
-          <br />
-          <span className="text-royal-gold italic">& {current.subtitle}</span>
-        </h1>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, y: -16 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h1 className="font-serif text-white text-5xl md:text-8xl font-bold leading-[1.05] drop-shadow-2xl mb-6">
+              {current.title}
+              <br />
+              <span className="text-royal-gold italic">& {current.subtitle}</span>
+            </h1>
 
-        <div className="flex items-center justify-center gap-4 mb-8">
-          <span className="h-px w-16 bg-royal-gold/50" />
-          <span className="text-royal-gold text-xs tracking-[0.4em] uppercase font-bold opacity-80">
-            {current.tag}
-          </span>
-          <span className="h-px w-16 bg-royal-gold/50" />
-        </div>
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <span className="h-px w-16 bg-royal-gold/50" />
+              <span className="text-royal-gold text-xs tracking-[0.4em] uppercase font-bold opacity-80">
+                {current.tag}
+              </span>
+              <span className="h-px w-16 bg-royal-gold/50" />
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
         <p className="text-gray-200 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
           {get("hero_description")}
         </p>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button
+          <motion.button
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             onClick={() => document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" })}
-            className="w-full sm:w-auto px-10 py-4 bg-royal-gold text-royal-maroon font-bold uppercase tracking-[0.2em] text-sm hover:bg-white transition-all duration-300 active:scale-95 shadow-2xl"
+            className="group/cta relative overflow-hidden w-full sm:w-auto px-10 py-4 bg-royal-gold text-royal-maroon font-bold uppercase tracking-[0.2em] text-sm hover:bg-white transition-colors duration-300 shadow-2xl"
           >
-            Explore Collections
-          </button>
-          <button
+            <span className="relative z-10">Explore Collections</span>
+            <span className="absolute top-0 left-[-60%] h-full w-1/3 bg-white/40 skew-x-[-15deg] opacity-0 group-hover/cta:opacity-100 group-hover/cta:animate-shimmer" />
+          </motion.button>
+          <motion.button
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="w-full sm:w-auto px-10 py-4 border border-white/50 text-white font-bold uppercase tracking-[0.2em] text-sm hover:bg-white hover:text-royal-maroon transition-all duration-300 active:scale-95"
+            className="w-full sm:w-auto px-10 py-4 border border-white/50 text-white font-bold uppercase tracking-[0.2em] text-sm hover:bg-white hover:text-royal-maroon transition-colors duration-300"
           >
             Get Quote on WhatsApp
-          </button>
+          </motion.button>
         </div>
 
         {/* Trust badges */}
