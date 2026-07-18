@@ -12,7 +12,7 @@ interface CursorGlowProps {
  * Attaches the listener to the parent element directly so it works as a drop-in
  * first child of any `relative` positioned section, without blocking clicks.
  */
-export default function CursorGlow({ className = "", size = 480, color = "rgba(212,175,55,0.16)" }: CursorGlowProps) {
+export default function CursorGlow({ className = "", size = 480, color = "rgba(199,166,114,0.12)" }: CursorGlowProps) {
   const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const rawX = useMotionValue(0);

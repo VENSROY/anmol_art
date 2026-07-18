@@ -38,22 +38,22 @@ export default function About() {
 
   return (
     <section id="about" className="bg-parchment py-24 scroll-mt-28 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-royal-gold/5 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-brass/8 blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="grid md:grid-cols-2 gap-16 items-center mb-28">
           {/* Image */}
           <Reveal y={30}>
             <motion.div ref={imgWrapRef} style={{ y: reduceMotion ? 0 : imgY }} className="relative group">
-              <div className="absolute -top-6 -left-6 w-full h-full border-2 border-royal-gold/30 rounded-2xl group-hover:-top-4 group-hover:-left-4 transition-all duration-500 pointer-events-none" />
+              <div className="absolute -top-5 -left-5 w-full h-full border border-brass/40 group-hover:-top-3 group-hover:-left-3 transition-all duration-[var(--dur-slow)] ease-craft pointer-events-none" />
               <img
                 src={aboutImg}
                 alt="Master artisan handcrafting traditional Rajasthani wood furniture at ANMOL Art, Jodhpur"
-                className="relative z-10 w-full h-[520px] object-cover rounded-2xl shadow-2xl grayscale hover:grayscale-0 transition duration-700"
+                className="relative z-10 w-full h-[520px] object-cover shadow-plinth grayscale-[0.35] hover:grayscale-0 transition duration-[var(--dur-slow)]"
               />
-              <div className="absolute -bottom-10 -right-10 hidden lg:flex flex-col items-center justify-center bg-royal-maroon p-8 rounded-2xl shadow-xl z-20 border-b-4 border-royal-gold w-36 h-36">
-                <p className="text-royal-gold font-serif text-3xl font-bold leading-none">Est.</p>
-                <p className="text-white text-3xl font-bold leading-none mt-1">{get("established_year")}</p>
+              <div className="absolute -bottom-10 -right-10 hidden lg:flex flex-col items-center justify-center bg-indigo p-8 shadow-plinth z-20 border-b-2 border-brass w-36 h-36">
+                <p className="text-brass-light font-serif text-3xl font-light leading-none">Est.</p>
+                <p className="text-limewash text-3xl font-light leading-none mt-1">{get("established_year")}</p>
               </div>
             </motion.div>
           </Reveal>
@@ -61,28 +61,28 @@ export default function About() {
           {/* Text */}
           <Reveal delay={0.15} y={30}>
             <div>
-              <span className="font-serif text-royal-gold text-base tracking-[0.3em] uppercase block mb-4">
+              <span className="caption text-brass block mb-5">
                 Our Legacy
               </span>
-              <h2 className="font-serif text-5xl md:text-6xl font-bold text-royal-maroon mb-8 leading-tight">
+              <h2 className="font-serif text-heading-1 text-ink font-light mb-8">
                 {get("about_title")}
               </h2>
-              <p className="text-earthy-brown text-lg leading-relaxed mb-5">
+              <p className="text-ink/70 text-body-base font-light leading-relaxed mb-5">
                 {get("about_body_1")}
               </p>
-              <p className="text-earthy-brown text-lg leading-relaxed mb-5">
+              <p className="text-ink/70 text-body-base font-light leading-relaxed mb-5">
                 {get("about_body_2")}
               </p>
-              <p className="text-earthy-brown text-lg leading-relaxed mb-8">
+              <p className="text-ink/70 text-body-base font-light leading-relaxed mb-8">
                 {get("about_body_3")}
               </p>
 
               {/* Stats */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-8 border-t border-royal-gold/20">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-8 border-t border-ink/15">
                 {stats.map((stat, i) => (
                   <div key={i} className="text-center">
-                    <p className="text-royal-maroon text-3xl font-bold font-serif">{stat.value}</p>
-                    <p className="text-earthy-brown text-[10px] uppercase tracking-[0.2em] font-bold mt-1">
+                    <p className="text-ink text-heading-2 font-serif font-light">{stat.value}</p>
+                    <p className="caption text-ink/40 mt-2">
                       {stat.label}
                     </p>
                   </div>
@@ -96,12 +96,12 @@ export default function About() {
         <div className="grid md:grid-cols-3 gap-8">
           {pillars.map((p, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              <div className="bg-white p-10 rounded-3xl shadow-sm border-b-4 border-transparent hover:border-royal-gold hover:shadow-xl transition-all duration-500 group h-full">
-                <div className="w-14 h-14 bg-parchment rounded-full flex items-center justify-center text-2xl mb-7 group-hover:scale-110 transition">
+              <div className="bg-limewash p-10 border-b border-ink/10 hover:border-brass transition-colors duration-[var(--dur-base)] group h-full">
+                <div className="w-12 h-12 flex items-center justify-center text-2xl mb-7 transition-transform duration-[var(--dur-base)] ease-craft group-hover:-translate-y-1">
                   {p.emoji}
                 </div>
-                <h3 className="font-serif text-xl font-bold text-royal-maroon mb-3">{p.title}</h3>
-                <p className="text-earthy-brown leading-relaxed text-sm">{p.desc}</p>
+                <h3 className="font-serif text-heading-3 text-ink font-light mb-3">{p.title}</h3>
+                <p className="text-ink/60 text-body-base font-light">{p.desc}</p>
               </div>
             </Reveal>
           ))}

@@ -134,11 +134,11 @@ export default function Stock() {
     <div className="bg-ivory min-h-screen">
 
       {/* ── Header ── */}
-      <div className="bg-royal-maroon py-20 px-6 text-center relative overflow-hidden">
+      <div className="bg-indigo-deep py-24 px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/az-subtle.png')]" aria-hidden="true" />
         <div className="relative z-10 max-w-3xl mx-auto">
-          <span className="text-royal-gold font-serif italic text-base tracking-widest block mb-3">ANMOL Art, Jodhpur</span>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
+          <span className="text-brass-light font-serif italic text-base tracking-widest block mb-3">ANMOL Art, Jodhpur</span>
+          <h1 className="font-serif text-heading-1 font-light text-limewash mb-5">
             {urlCategory ? `${urlCategory.charAt(0).toUpperCase() + urlCategory.slice(1)} Collection` : "Our Stock Gallery"}
           </h1>
           <p className="text-gray-300 text-base leading-relaxed mb-8">
@@ -148,7 +148,7 @@ export default function Stock() {
             {phone && (
               <a href={`tel:${phone.replace(/\s/g, "")}`} aria-label="Call ANMOL Art"
                 className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 text-sm font-bold tracking-wider transition">
-                <Icon name="fa-phone" className="text-royal-gold" /> {phone}
+                <Icon name="fa-phone" className="text-brass-light" /> {phone}
               </a>
             )}
             {waNumber && (
@@ -161,7 +161,7 @@ export default function Stock() {
             {email && (
               <a href={`mailto:${email}`} aria-label="Email ANMOL Art"
                 className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 text-sm font-bold tracking-wider transition">
-                <Icon name="fa-envelope" className="text-royal-gold" /> Email Us
+                <Icon name="fa-envelope" className="text-brass-light" /> Email Us
               </a>
             )}
           </div>
@@ -173,13 +173,13 @@ export default function Stock() {
         {/* ── Category Not Found ── */}
         {urlCategoryNotFound && (
           <div className="max-w-lg mx-auto text-center py-20">
-            <Icon name="fa-folder-open" className="text-royal-gold text-5xl mb-4 block" />
+            <Icon name="fa-folder-open" className="text-brass-light text-5xl mb-4 block" />
             <p className="font-serif text-2xl font-bold text-royal-maroon mb-3">Category Not Found</p>
             <p className="text-earthy-brown/60 mb-6">
               The category <strong>"{urlCategory}"</strong> doesn't exist. Browse all available categories below.
             </p>
             <button onClick={() => setFilter("All")}
-              className="bg-royal-maroon text-white px-8 py-3 font-bold text-sm uppercase tracking-widest hover:bg-royal-gold hover:text-royal-maroon transition">
+              className="bg-royal-maroon text-limewash px-8 py-3 font-bold text-sm uppercase tracking-widest hover:bg-brass hover:text-royal-maroon transition">
               View All Stock
             </button>
           </div>
@@ -194,8 +194,8 @@ export default function Stock() {
                   <button key={cat} onClick={() => setFilter(cat)} aria-pressed={filter === cat}
                     className={`px-5 py-2 text-xs font-bold uppercase tracking-widest border transition ${
                       filter === cat
-                        ? "bg-royal-maroon text-white border-royal-maroon"
-                        : "bg-white text-royal-maroon border-royal-gold/30 hover:border-royal-maroon"
+                        ? "bg-royal-maroon text-limewash border-royal-maroon"
+                        : "bg-white text-royal-maroon border-brass/30 hover:border-royal-maroon"
                     }`}>
                     {cat}
                     <span className="ml-1.5 opacity-50">({catCount(cat)})</span>
@@ -214,8 +214,8 @@ export default function Stock() {
 
             {/* ── No Supabase config ── */}
             {!loading && !isSupabaseConfigured && (
-              <div className="max-w-2xl mx-auto border border-royal-gold/30 rounded-2xl p-8 text-center bg-white shadow-sm my-16">
-                <Icon name="fa-circle-exclamation" className="text-royal-gold text-4xl mb-4 block" />
+              <div className="max-w-2xl mx-auto border border-brass/30 rounded-2xl p-8 text-center bg-white shadow-sm my-16">
+                <Icon name="fa-circle-exclamation" className="text-brass-light text-4xl mb-4 block" />
                 <p className="text-royal-maroon font-serif text-xl font-bold mb-2">Stock Gallery Offline</p>
                 <p className="text-earthy-brown/70 text-sm leading-relaxed font-light">
                   Configure Supabase credentials in <code className="bg-ivory px-2 py-1 rounded text-xs font-mono">.env</code> to enable the gallery.
@@ -247,7 +247,7 @@ export default function Stock() {
                       role="button"
                       tabIndex={0}
                       aria-label={`View ${img.label} in full screen`}
-                      className="break-inside-avoid cursor-zoom-in group relative overflow-hidden rounded-xl focus-visible:ring-2 focus-visible:ring-royal-gold"
+                      className="break-inside-avoid cursor-zoom-in group relative overflow-hidden rounded-xl focus-visible:ring-2 focus-visible:ring-brass"
                     >
                       <img
                         src={img.url}
@@ -258,7 +258,7 @@ export default function Stock() {
                       />
                       <div className="absolute inset-0 bg-royal-maroon/0 group-hover:bg-royal-maroon/50 transition-all duration-300 flex flex-col items-start justify-end p-3" aria-hidden="true">
                         <p className="text-white text-xs font-bold opacity-0 group-hover:opacity-100 transition">{img.label}</p>
-                        <p className="text-royal-gold text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition">{img.category}</p>
+                        <p className="text-brass-light text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition">{img.category}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -270,7 +270,7 @@ export default function Stock() {
                     <button
                       onClick={loadMore}
                       disabled={loadingMore}
-                      className="flex items-center gap-2 mx-auto bg-royal-maroon text-white px-10 py-4 font-bold uppercase tracking-widest text-sm hover:bg-royal-gold hover:text-royal-maroon transition disabled:opacity-50"
+                      className="flex items-center gap-2 mx-auto bg-royal-maroon text-limewash px-10 py-4 font-bold uppercase tracking-widest text-sm hover:bg-brass hover:text-royal-maroon transition disabled:opacity-50"
                     >
                       {loadingMore
                         ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Loading…</>
@@ -286,7 +286,7 @@ export default function Stock() {
 
         {/* ── Bottom Contact ── */}
         {!loading && (
-          <div className="mt-20 border border-royal-gold/20 rounded-2xl p-10 text-center bg-white shadow-sm">
+          <div className="mt-20 border border-brass/20 rounded-2xl p-10 text-center bg-white shadow-sm">
             <p className="text-royal-maroon font-serif text-2xl md:text-3xl font-bold mb-3">Something catch your eye?</p>
             <p className="text-earthy-brown mb-8 max-w-lg mx-auto leading-relaxed">
               Contact us directly for price, availability, and delivery details.
@@ -294,7 +294,7 @@ export default function Stock() {
             <div className="flex flex-wrap gap-4 justify-center">
               {phone && (
                 <a href={`tel:${phone.replace(/\s/g, "")}`}
-                  className="flex items-center gap-2 bg-royal-maroon text-white px-8 py-3 font-bold text-sm uppercase tracking-widest hover:bg-royal-gold hover:text-royal-maroon transition">
+                  className="flex items-center gap-2 bg-royal-maroon text-limewash px-8 py-3 font-bold text-sm uppercase tracking-widest hover:bg-brass hover:text-royal-maroon transition">
                   <Icon name="fa-phone" /> Call Now
                 </a>
               )}
@@ -331,7 +331,7 @@ export default function Stock() {
             transition={{ duration: reduceMotion ? 0 : 0.25 }}
           >
             <button onClick={closeLightbox} aria-label="Close image viewer"
-              className="absolute top-5 right-5 text-white text-3xl w-10 h-10 flex items-center justify-center hover:text-royal-gold transition z-10">
+              className="absolute top-5 right-5 text-white text-3xl w-10 h-10 flex items-center justify-center hover:text-brass-light transition z-10">
               <Icon name="fa-xmark" />
             </button>
             <button onClick={prevImg} aria-label="Previous image"
@@ -354,7 +354,7 @@ export default function Stock() {
               />
               <div className="mt-4 text-center">
                 <p className="text-white font-bold text-lg">{images[lightbox].label}</p>
-                <p className="text-royal-gold text-xs uppercase tracking-widest mt-1">{images[lightbox].category}</p>
+                <p className="text-brass-light text-xs uppercase tracking-widest mt-1">{images[lightbox].category}</p>
                 {waNumber && (
                   <a
                     href={`https://wa.me/${waNumber}?text=Namaste! I'm interested in: ${encodeURIComponent(images[lightbox].label ?? "")}. Please share price and details.`}

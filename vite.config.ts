@@ -18,9 +18,7 @@ export default defineConfig({
       "framer-motion",
       "@supabase/supabase-js",
       "@tanstack/react-query",
-      "react-icons/fa",
-      "three",
-      "@react-three/fiber",
+      "react-icons/fa6",
     ],
   },
   build: {
@@ -35,10 +33,6 @@ export default defineConfig({
           supabase: ["@supabase/supabase-js"],
           // Motion primitives used across the site
           "motion-vendor": ["framer-motion"],
-          // NOTE: three/@react-three/fiber are deliberately NOT listed here.
-          // They are only reachable via the lazy HeroOrnament3D import, so Rollup
-          // already isolates them; forcing them into a manual chunk pulls shared
-          // helpers (e.g. scheduler) into it and makes the entry preload ~800kB.
         },
       },
     },

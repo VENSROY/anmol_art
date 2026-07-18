@@ -5,34 +5,113 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Design Tokens ──────────────────────────────────────────────────────────────
-   Single source of truth for the palette. tailwind.config.js references these
-   same variables, so `text-earthy-brown` and `color: var(--earthy-brown)` can
-   never drift apart again. Values are raw channels so Tailwind can apply its
-   opacity modifiers (e.g. text-earthy-brown/50).
+/* ─── Design Tokens · "Jharokha" ─────────────────────────────────────────────────
+   Palette drawn from Jodhpur itself: limewash sandstone walls, the blue city,
+   aged brass hardware, and ink-dark carved shadow. Royal maroon is retained as
+   the brand anchor for primary actions rather than as a surface colour.
+
+   tailwind.config.js references these same variables, so a utility class and a
+   plain CSS declaration can never drift apart. Values are raw channels so
+   Tailwind's opacity modifiers keep working (e.g. text-ink/50).
    ───────────────────────────────────────────────────────────────────────────── */
 :root {
+  /* Surfaces — warm, chalky, architectural */
+  --sandstone: 237 230 218;       /* #EDE6DA  primary page surface */
+  --limewash: 246 242 235;        /* #F6F2EB  raised surface */
+  --sandstone-deep: 222 212 196;  /* #DED4C4  recessed / borders */
+
+  /* Depth — the blue city, used for immersive dark sections */
+  --indigo: 27 42 74;             /* #1B2A4A */
+  --indigo-deep: 17 27 48;        /* #111B30 */
+
+  /* Metal — aged brass, never bright gold */
+  --brass: 168 131 79;            /* #A8834F */
+  --brass-light: 199 166 114;     /* #C7A672 */
+
+  /* Ink — carved shadow, body copy */
+  --ink: 38 33 29;                /* #26211D */
+
+  /* Brand anchor — retained for primary CTAs and the footer */
   --royal-maroon: 93 0 30;        /* #5D001E */
-  --royal-gold: 212 175 55;       /* #D4AF37 */
-  --royal-gold-dark: 180 148 31;  /* #B4941F */
-  --ivory: 253 251 247;           /* #FDFBF7 */
-  --earthy-brown: 61 43 31;       /* #3D2B1F */
-  --antique-cream: 243 229 171;   /* #F3E5AB */
-  --parchment: 251 246 230;       /* #FBF6E6 — alternating section background */
+
+  /* ── Legacy aliases ──────────────────────────────────────────────────────────
+     The admin panel and a few utilities still reference the old names. Mapping
+     them onto the new palette keeps those surfaces coherent without a rewrite. */
+  --royal-gold: var(--brass);
+  --royal-gold-dark: 140 108 64;
+  --ivory: var(--limewash);
+  --earthy-brown: var(--ink);
+  --antique-cream: 226 209 176;
+  --parchment: var(--sandstone);
+}
+
+/* ─── Type Scale ─────────────────────────────────────────────────────────────────
+   Fraunces carries the voice: a variable serif with optical-size and "wonk"
+   axes that give it a cut-by-hand irregularity Playfair does not have.
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* One easing curve and one timing scale for the entire site. */
+  --ease-craft: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 260ms;
+  --dur-base: 520ms;
+  --dur-slow: 900ms;
 }
 
 /* ─── Base Styles ────────────────────────────────────────────────────────────── */
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: rgb(var(--ivory));
-  color: rgb(var(--earthy-brown));
+  font-family: var(--font-body);
+  background-color: rgb(var(--sandstone));
+  color: rgb(var(--ink));
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, .font-serif {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
+  /* Slight optical looseness + the "wonk" axis give headings a cut-by-hand feel */
+  font-variation-settings: "SOFT" 0, "WONK" 1;
+  letter-spacing: -0.015em;
+}
+
+/* Museum caption: small, spaced, uppercase — used for catalogue labels.
+   Size comes from the fluid `caption` token so it scales with the viewport
+   instead of sitting at 11px from 320px to 1920px. */
+.caption {
+  font-family: var(--font-body);
+  font-size: clamp(0.6875rem, 0.62vw, 0.8125rem);
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* ── Tap targets ──────────────────────────────────────────────────────────────
+   The quiet text CTAs ("Full Catalogue", "Commission a Piece") are bare text
+   with a hairline rule, which measured 17px tall — a WCAG 2.5.5 failure. This
+   gives them a 44px hit area without changing how they look, by expanding the
+   clickable box rather than adding visible padding. */
+.tap-safe {
+  position: relative;
+}
+.tap-safe::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  min-height: 44px;
+  height: 100%;
+}
+
+/* Devanagari watermark ornament */
+.devanagari {
+  font-family: "Noto Serif Devanagari", var(--font-display), serif;
+  font-weight: 400;
 }
 
 .font-script {
@@ -155,6 +234,15 @@ h1, h2, h3, .font-serif {
   .animate-bounce {
     animation: none !important;
   }
+}
+
+/* Horizontal rails (hero catalogue, filter index) scroll without a visible bar */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* ─── Focus Styles (Accessibility) ──────────────────────────────────────────── */

@@ -26,3 +26,7 @@ dist-ssr
 
 .claude/settings.local.json
 .claude/*.lock
+
+# iCloud sync conflict copies (e.g. "Navbar 2.tsx")
+* [0-9].tsx
+* [0-9].ts

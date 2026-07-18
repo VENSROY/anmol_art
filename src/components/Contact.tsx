@@ -59,13 +59,13 @@ export default function Contact() {
   return (
     <section id="contact" className="bg-ivory py-32 scroll-mt-28">
       <div className="container mx-auto px-6 max-w-6xl">
-        <div className="relative bg-royal-maroon text-ivory rounded-[3rem] shadow-2xl overflow-hidden">
+        <div className="relative bg-indigo text-limewash overflow-hidden">
           <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/az-subtle.png')]" aria-hidden="true" />
 
           <div className="relative z-10 px-8 py-24 md:px-20">
             <div className="text-center mb-20">
-              <h2 className="font-serif text-5xl md:text-6xl font-bold text-white mb-6">
-                Let's Build <span className="text-royal-gold">Together</span>
+              <h2 className="font-serif text-heading-1 font-light text-limewash mb-6">
+                Let's Build <span className="text-brass-light">Together</span>
               </h2>
               <p className="max-w-2xl mx-auto text-lg text-gray-300 leading-relaxed font-light">
                 Whether it's a single masterpiece for your home or a bulk order for a hotel project, our doors are always open for a conversation.
@@ -74,36 +74,36 @@ export default function Contact() {
 
             {/* Contact cards */}
             <div className="grid lg:grid-cols-3 gap-8 mb-20">
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-royal-maroon transition-all duration-500 group">
-                <div className="w-14 h-14 bg-royal-gold/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-royal-maroon">
-                  <Icon name="fa-location-dot" className="text-royal-gold text-2xl group-hover:text-white" />
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-indigo-deep transition-all duration-500 group">
+                <div className="w-14 h-14 bg-brass/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-indigo-deep">
+                  <Icon name="fa-location-dot" className="text-brass-light text-2xl group-hover:text-white" />
                 </div>
                 <h4 className="font-serif text-2xl font-bold mb-4">Visit Showroom</h4>
                 <p className="text-sm leading-relaxed opacity-80 group-hover:opacity-100">{address}</p>
                 {hours && <p className="text-xs mt-3 opacity-60 group-hover:opacity-80">{hours}</p>}
               </div>
 
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-royal-maroon transition-all duration-500 group">
-                <div className="w-14 h-14 bg-royal-gold/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-royal-maroon">
-                  <Icon name="fa-phone" className="text-royal-gold text-2xl group-hover:text-white" />
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-indigo-deep transition-all duration-500 group">
+                <div className="w-14 h-14 bg-brass/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-indigo-deep">
+                  <Icon name="fa-phone" className="text-brass-light text-2xl group-hover:text-white" />
                 </div>
                 <h4 className="font-serif text-2xl font-bold mb-4">Quick Connect</h4>
-                <a href={`tel:${phone.replace(/\s/g, "")}`} className="text-xl font-bold block hover:text-royal-gold transition group-hover:text-royal-maroon">{phone}</a>
+                <a href={`tel:${phone.replace(/\s/g, "")}`} className="text-xl font-bold block hover:text-brass-light transition group-hover:text-indigo-deep">{phone}</a>
                 <a
                   href={`https://wa.me/${waNumber}`}
                   target="_blank" rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-2 bg-green-500 text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-green-600 transition"
+                  className="mt-3 inline-flex items-center gap-2 bg-green-500 text-white text-xs font-bold px-5 py-3 rounded-full hover:bg-green-600 transition"
                 >
                   <Icon name="fa-whatsapp" /> WhatsApp
                 </a>
               </div>
 
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-royal-maroon transition-all duration-500 group">
-                <div className="w-14 h-14 bg-royal-gold/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-royal-maroon">
-                  <Icon name="fa-envelope" className="text-royal-gold text-2xl group-hover:text-white" />
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-indigo-deep transition-all duration-500 group">
+                <div className="w-14 h-14 bg-brass/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-indigo-deep">
+                  <Icon name="fa-envelope" className="text-brass-light text-2xl group-hover:text-white" />
                 </div>
                 <h4 className="font-serif text-2xl font-bold mb-4">Email Inquiry</h4>
-                <a href={`mailto:${email}`} className="text-base font-medium opacity-80 group-hover:opacity-100 hover:text-royal-gold transition break-all">{email}</a>
+                <a href={`mailto:${email}`} className="text-base font-medium opacity-80 group-hover:opacity-100 hover:text-brass-light transition break-all">{email}</a>
               </div>
             </div>
 
@@ -121,7 +121,7 @@ export default function Contact() {
                   <p className="text-gray-300 text-sm">We'll be in touch soon. You can also reach us directly on WhatsApp.</p>
                   <button
                     onClick={() => setStatus("idle")}
-                    className="mt-6 text-royal-gold text-sm hover:underline"
+                    className="mt-6 text-brass-light text-sm hover:underline"
                   >
                     Send another message
                   </button>
@@ -142,7 +142,7 @@ export default function Contact() {
                         placeholder="Your full name"
                         required
                         className="w-full bg-white/10 border border-white/20 text-white placeholder-white/30
-                          rounded-xl px-4 py-3 text-sm outline-none focus:border-royal-gold transition"
+                          rounded-xl px-4 py-3 text-sm outline-none focus:border-brass transition"
                       />
                     </div>
                     <div>
@@ -157,7 +157,7 @@ export default function Contact() {
                         onChange={handleChange}
                         placeholder="your@email.com"
                         className="w-full bg-white/10 border border-white/20 text-white placeholder-white/30
-                          rounded-xl px-4 py-3 text-sm outline-none focus:border-royal-gold transition"
+                          rounded-xl px-4 py-3 text-sm outline-none focus:border-brass transition"
                       />
                     </div>
                     <div>
@@ -172,7 +172,7 @@ export default function Contact() {
                         onChange={handleChange}
                         placeholder="+91 98XXX XXXXX"
                         className="w-full bg-white/10 border border-white/20 text-white placeholder-white/30
-                          rounded-xl px-4 py-3 text-sm outline-none focus:border-royal-gold transition"
+                          rounded-xl px-4 py-3 text-sm outline-none focus:border-brass transition"
                       />
                     </div>
                     <div className="sm:row-span-2">
@@ -188,7 +188,7 @@ export default function Contact() {
                         required
                         rows={5}
                         className="w-full h-full min-h-[120px] bg-white/10 border border-white/20 text-white placeholder-white/30
-                          rounded-xl px-4 py-3 text-sm outline-none focus:border-royal-gold transition resize-none"
+                          rounded-xl px-4 py-3 text-sm outline-none focus:border-brass transition resize-none"
                       />
                     </div>
                   </div>
@@ -203,12 +203,12 @@ export default function Contact() {
                     <button
                       type="submit"
                       disabled={status === "submitting" || !form.name.trim() || !form.message.trim()}
-                      className="flex items-center justify-center gap-2 bg-royal-gold text-royal-maroon
+                      className="flex items-center justify-center gap-2 bg-brass text-indigo-deep
                         px-10 py-4 font-bold uppercase tracking-widest text-sm
                         hover:bg-white transition disabled:opacity-50 disabled:cursor-not-allowed rounded-xl"
                     >
                       {status === "submitting" ? (
-                        <><div className="w-4 h-4 border-2 border-royal-maroon border-t-transparent rounded-full animate-spin" /> Sending…</>
+                        <><div className="w-4 h-4 border-2 border-indigo-deep border-t-transparent rounded-full animate-spin" /> Sending…</>
                       ) : (
                         <><Icon name="fa-paper-plane" /> Send Message</>
                       )}
@@ -230,7 +230,7 @@ export default function Contact() {
 
             {/* Social links */}
             <div className="mt-16 flex flex-col items-center">
-              <p className="uppercase tracking-[0.3em] text-xs text-royal-gold font-bold mb-8">Follow Our Journey</p>
+              <p className="uppercase tracking-[0.3em] text-xs text-brass-light font-bold mb-8">Follow Our Journey</p>
               <div className="flex gap-6">
                 {[
                   { icon: <Icon name="fa-instagram" aria-hidden="true" />, link: instagram,  label: "Follow us on Instagram" },
@@ -243,7 +243,7 @@ export default function Contact() {
                     aria-label={social.label}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-xl hover:bg-royal-gold hover:text-royal-maroon hover:border-royal-gold transition-all duration-300"
+                    className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-xl hover:bg-brass hover:text-indigo-deep hover:border-brass transition-all duration-300"
                   >
                     {social.icon}
                   </a>

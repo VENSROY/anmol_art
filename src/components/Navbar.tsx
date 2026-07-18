@@ -46,38 +46,43 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top info bar */}
-      <div className="hidden md:flex bg-royal-maroon text-white/70 text-[11px] tracking-widest uppercase justify-between items-center px-8 py-2">
-        <span>📍 Jodhpur, Rajasthan – Est. {get("established_year")}</span>
-        <div className="flex gap-6 items-center">
-          {phone && <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-royal-gold transition">📞 {phone}</a>}
-          {instagram && <a href={instagram} target="_blank" rel="noreferrer" className="hover:text-royal-gold transition">Instagram</a>}
-          {waNumber && <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer" className="hover:text-royal-gold transition">WhatsApp</a>}
+      {/* Top info bar — quiet, architectural, always reachable */}
+      <div className="hidden md:flex bg-indigo-deep text-limewash/55 caption justify-between items-center px-8 py-2.5">
+        <span>Jodhpur, Rajasthan · Est. {get("established_year")}</span>
+        <div className="flex gap-8 items-center">
+          {phone && <a href={`tel:${phone.replace(/\s/g, "")}`} className="inline-flex items-center min-h-[44px] px-1 hover:text-brass-light transition-colors">{phone}</a>}
+          {instagram && <a href={instagram} target="_blank" rel="noreferrer" className="inline-flex items-center min-h-[44px] px-1 hover:text-brass-light transition-colors">Instagram</a>}
+          {waNumber && <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer" className="inline-flex items-center min-h-[44px] px-1 hover:text-brass-light transition-colors">WhatsApp</a>}
         </div>
       </div>
 
-      <nav className={`sticky top-0 w-full z-50 transition-all duration-300 bg-ivory/97 backdrop-blur-md border-b border-royal-gold/30 ${scrolled ? "shadow-md py-3" : "py-4"}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+      <nav className={`sticky top-0 w-full z-50 transition-all duration-[var(--dur-base)] ease-craft bg-sandstone/95 backdrop-blur-md border-b border-ink/10 ${scrolled ? "py-3" : "py-5"}`}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10 flex justify-between items-center gap-6">
           <button
             onClick={() => handleNavigation("home")}
             aria-label="ANMOL Art – Home"
-            className="text-2xl md:text-3xl font-serif font-bold text-royal-maroon flex items-center gap-2 tracking-tight"
+            className="group flex items-baseline gap-2.5 shrink-0 py-2.5"
           >
-            <Icon name="fa-crown" className="text-royal-gold text-xl" /> ANMOL Art
+            <span className="font-serif text-2xl md:text-[1.7rem] font-normal text-ink tracking-tight leading-none">
+              ANMOL
+            </span>
+            <span className="font-serif text-2xl md:text-[1.7rem] italic font-light text-brass leading-none">
+              Art
+            </span>
           </button>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-7 font-bold text-[13px] tracking-wider text-royal-maroon uppercase">
+          <div className="hidden md:flex items-center gap-9 caption text-ink/70">
             {navLinks.map((item) =>
               item.link ? (
-                <Link key={item.label} to={item.link} className="relative group/nav hover:text-royal-gold transition py-1">
+                <Link key={item.label} to={item.link} className="relative group/nav hover:text-ink transition-colors py-1">
                   {item.label}
-                  <span className="absolute left-0 -bottom-0.5 w-0 group-hover/nav:w-full h-[1.5px] bg-royal-gold transition-all duration-300" />
+                  <span className="absolute left-0 -bottom-0.5 w-0 group-hover/nav:w-full h-px bg-brass transition-all duration-[var(--dur-base)] ease-craft" />
                 </Link>
               ) : (
-                <button key={item.label} onClick={item.action} className="relative group/nav hover:text-royal-gold transition py-1">
+                <button key={item.label} onClick={item.action} className="relative group/nav hover:text-ink transition-colors py-1">
                   {item.label}
-                  <span className="absolute left-0 -bottom-0.5 w-0 group-hover/nav:w-full h-[1.5px] bg-royal-gold transition-all duration-300" />
+                  <span className="absolute left-0 -bottom-0.5 w-0 group-hover/nav:w-full h-px bg-brass transition-all duration-[var(--dur-base)] ease-craft" />
                 </button>
               )
             )}
@@ -87,42 +92,76 @@ export default function Navbar() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Chat with ANMOL Art on WhatsApp"
-                className="bg-royal-maroon text-white px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-royal-gold hover:text-royal-maroon transition-all"
+                className="bg-royal-maroon text-limewash px-6 py-3 caption hover:bg-brass hover:text-indigo-deep transition-colors duration-[var(--dur-fast)]"
               >
-                WhatsApp
+                Enquire
               </a>
             )}
           </div>
 
-          {/* Hamburger */}
-          <button
-            className="md:hidden text-2xl text-royal-maroon"
-            onClick={() => setOpen(!open)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-          >
-            <Icon name={open ? "fa-xmark" : "fa-bars"} />
-          </button>
+          {/* Mobile: tap-to-call sits in the bar itself — on a phone, calling
+              the workshop is the most likely action, so it should not be
+              buried behind a menu. */}
+          <div className="flex items-center gap-1 md:hidden">
+            {phone && (
+              <a
+                href={`tel:${phone.replace(/\s/g, "")}`}
+                aria-label={`Call ANMOL Art on ${phone}`}
+                className="p-3.5 text-ink hover:text-brass transition-colors"
+              >
+                <Icon name="fa-phone" className="text-lg" />
+              </a>
+            )}
+            <button
+              className="p-3 text-xl text-ink"
+              onClick={() => setOpen(!open)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+            >
+              <Icon name={open ? "fa-xmark" : "fa-bars"} />
+            </button>
+          </div>
         </div>
 
         {/* Mobile nav */}
-        <div className={`md:hidden bg-ivory border-t border-royal-gold/20 overflow-hidden transition-all duration-300 ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
-          <div className="flex flex-col p-6 space-y-4 text-center font-bold text-sm tracking-widest uppercase text-royal-maroon">
-            {navLinks.map((item) =>
+        <div
+          id="mobile-menu"
+          className={`md:hidden bg-sandstone border-t border-ink/10 overflow-hidden transition-all duration-[var(--dur-base)] ease-craft ${
+            open ? "max-h-[560px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="flex flex-col px-6 py-4">
+            {navLinks.map((item, i) =>
               item.link ? (
-                <Link key={item.label} to={item.link} onClick={() => setOpen(false)} className="py-2 hover:text-royal-gold transition">
-                  {item.label}
+                <Link
+                  key={item.label}
+                  to={item.link}
+                  onClick={() => setOpen(false)}
+                  className="flex items-baseline gap-4 py-4 border-b border-ink/8 text-ink hover:text-brass transition-colors"
+                >
+                  <span className="caption text-brass/50 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-serif text-2xl font-light">{item.label}</span>
                 </Link>
               ) : (
-                <button key={item.label} onClick={item.action} className="py-2 hover:text-royal-gold transition">
-                  {item.label}
+                <button
+                  key={item.label}
+                  onClick={item.action}
+                  className="flex items-baseline gap-4 py-4 border-b border-ink/8 text-ink hover:text-brass transition-colors text-left"
+                >
+                  <span className="caption text-brass/50 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-serif text-2xl font-light">{item.label}</span>
                 </button>
               )
             )}
             {waNumber && (
-              <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer"
-                className="mt-2 py-3 bg-royal-maroon text-white flex items-center justify-center gap-2 hover:bg-royal-gold hover:text-royal-maroon transition">
-                <Icon name="fa-whatsapp" /> WhatsApp
+              <a
+                href={`https://wa.me/${waNumber}`}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-6 mb-2 py-4 bg-royal-maroon text-limewash flex items-center justify-center gap-3 caption hover:bg-brass hover:text-indigo-deep transition-colors"
+              >
+                <Icon name="fa-whatsapp" className="text-base" /> Enquire on WhatsApp
               </a>
             )}
           </div>

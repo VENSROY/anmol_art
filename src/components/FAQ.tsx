@@ -41,39 +41,73 @@ export default function FAQ() {
   }, []);
 
   return (
-    <section id="faq" className="bg-parchment py-32 scroll-mt-28">
-      <div className="container mx-auto px-6 max-w-4xl">
-        <Reveal className="text-center mb-20">
-          <span className="text-royal-gold font-serif italic text-lg block mb-2">Help & Support</span>
-          <h2 className="font-serif text-5xl font-bold text-royal-maroon">Common Queries</h2>
-          <div className="w-16 h-1 bg-royal-gold mx-auto mt-4" />
+    <section id="faq" className="bg-sandstone py-32 md:py-40 scroll-mt-28">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
+        <Reveal className="grid grid-cols-12 gap-6 mb-16">
+          <div className="col-span-12 lg:col-span-3">
+            <p className="caption text-brass">Enquiries</p>
+          </div>
+          <div className="col-span-12 lg:col-span-7">
+            <h2 className="font-serif text-heading-1 text-ink font-light">
+              Questions we are
+              <span className="italic text-brass"> asked most.</span>
+            </h2>
+          </div>
         </Reveal>
 
-        <div className="space-y-4">
-          {faqs.map((item, index) => (
-            <Reveal key={item.id} delay={index * 0.06} y={16}>
-              <div className="bg-white rounded-xl shadow-sm border border-royal-gold/10 overflow-hidden transition-all duration-300">
-                <button
-                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  aria-expanded={openIndex === index}
-                  className="w-full flex justify-between items-center px-8 py-6 text-left group"
-                >
-                  <span className={`text-lg font-bold transition-colors ${openIndex === index ? "text-royal-gold" : "text-earthy-brown group-hover:text-royal-maroon"}`}>
-                    {item.question}
-                  </span>
-                  <span className={`text-2xl transition-transform duration-300 flex-shrink-0 ml-4 ${openIndex === index ? "rotate-45 text-royal-gold" : "text-royal-maroon"}`}>
-                    +
-                  </span>
-                </button>
+        {/* Quiet editorial list — hairline rules rather than floating cards */}
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 lg:col-start-4 lg:col-span-8 border-t border-ink/12">
+            {faqs.map((item, index) => {
+              const isOpen = openIndex === index;
+              return (
+                <Reveal key={item.id} delay={Math.min(index, 4) * 0.05} y={12}>
+                  <div className="border-b border-ink/12">
+                    <button
+                      onClick={() => setOpenIndex(isOpen ? null : index)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-panel-${item.id}`}
+                      id={`faq-trigger-${item.id}`}
+                      className="w-full flex justify-between items-start gap-6 py-7 text-left group"
+                    >
+                      <span
+                        className={`font-serif text-heading-3 font-light transition-colors duration-[var(--dur-fast)] ${
+                          isOpen ? "text-brass" : "text-ink group-hover:text-brass"
+                        }`}
+                      >
+                        {item.question}
+                      </span>
+                      {/* Rotating rule instead of a plus glyph */}
+                      <span className="relative flex-shrink-0 w-4 h-4 mt-2" aria-hidden="true">
+                        <span className="absolute inset-x-0 top-1/2 h-px bg-current -translate-y-1/2 text-ink/50" />
+                        <span
+                          className={`absolute inset-y-0 left-1/2 w-px bg-current -translate-x-1/2 transition-transform duration-[var(--dur-base)] ease-craft ${
+                            isOpen ? "scale-y-0 text-brass" : "scale-y-100 text-ink/50"
+                          }`}
+                        />
+                      </span>
+                    </button>
 
-                <div className={`overflow-hidden transition-all duration-500 ${openIndex === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
-                  <div className="px-8 pb-8 text-earthy-brown leading-relaxed border-t border-gray-50 pt-4">
-                    {item.answer}
+                    {/* grid-template-rows animates to real content height, so long
+                        answers are never clipped the way a fixed max-h clipped them. */}
+                    <div
+                      id={`faq-panel-${item.id}`}
+                      role="region"
+                      aria-labelledby={`faq-trigger-${item.id}`}
+                      className="grid transition-all duration-[var(--dur-base)] ease-craft"
+                      style={{ gridTemplateRows: isOpen ? "1fr" : "0fr", opacity: isOpen ? 1 : 0 }}
+                    >
+                      <div className="overflow-hidden">
+                        <p className="pb-8 pr-10 text-ink/65 text-body-base font-light max-w-2xl">
+                          {item.answer}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
