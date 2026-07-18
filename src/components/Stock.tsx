@@ -3,10 +3,12 @@ import { useParams } from "react-router-dom";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { listCategories } from "../services/categories.service";
-import { listStockImagesPage } from "../services/stockImages.service";
+import { listStockImagesPage, getCategoryStats } from "../services/stockImages.service";
+import type { CategoryStat } from "../services/stockImages.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
 import Reveal from "./motion/Reveal";
 import type { StockImage, Category } from "./admin/types";
+import Icon from "./ui/Icon";
 
 export default function Stock() {
   const { category: urlCategory } = useParams<{ category?: string }>();
@@ -15,6 +17,7 @@ export default function Stock() {
 
   const [images, setImages]         = useState<StockImage[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [catStats, setCatStats]     = useState<Record<string, CategoryStat>>({});
   const [loading, setLoading]       = useState(true);
   const [filter, setFilter]         = useState<string>("All");
   const [lightbox, setLightbox]     = useState<number | null>(null);
@@ -38,12 +41,15 @@ export default function Stock() {
     setImages([]);
   }, [urlCategory]);
 
-  // Fetch categories once
+  // Fetch categories and their true totals once
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     listCategories()
       .then(setCategories)
-      .catch((err) => console.error("[Stock] failed to load categories", err));
+      .catch((err) => console.error("[Stock] failed to load categories", err instanceof Error ? err.message : err));
+    getCategoryStats()
+      .then(setCatStats)
+      .catch((err) => console.error("[Stock] failed to load category counts", err instanceof Error ? err.message : err));
   }, []);
 
   // Fetch images (with pagination)
@@ -78,17 +84,24 @@ export default function Stock() {
   };
 
   const allFilters = ["All", ...categories.map((c) => c.name)];
-  const catCount   = (cat: string) => cat === "All" ? images.length : images.filter((i) => i.category === cat).length;
 
-  const openLightbox  = useCallback((i: number) => {
-    setLightbox(i);
+  // Totals come from the whole table, not the currently-loaded page — otherwise
+  // "All (48)" would be shown for a 500-image gallery and every inactive filter
+  // would read (0) while a category filter is applied.
+  const totalAll = Object.values(catStats).reduce((sum, s) => sum + s.count, 0);
+  const catCount = (cat: string) => (cat === "All" ? totalAll : catStats[cat]?.count ?? 0);
+
+  const openLightbox  = useCallback((i: number) => setLightbox(i), []);
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+
+  // Own the scroll lock in an effect so it is always released — including when
+  // the user navigates away with the lightbox still open.
+  useEffect(() => {
+    if (lightbox === null) return;
+    const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-  }, []);
-
-  const closeLightbox = useCallback(() => {
-    setLightbox(null);
-    document.body.style.overflow = "";
-  }, []);
+    return () => { document.body.style.overflow = previous; };
+  }, [lightbox]);
 
   const prevImg = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -135,20 +148,20 @@ export default function Stock() {
             {phone && (
               <a href={`tel:${phone.replace(/\s/g, "")}`} aria-label="Call ANMOL Art"
                 className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 text-sm font-bold tracking-wider transition">
-                <i className="fa-solid fa-phone text-royal-gold" aria-hidden="true" /> {phone}
+                <Icon name="fa-phone" className="text-royal-gold" /> {phone}
               </a>
             )}
             {waNumber && (
               <a href={`https://wa.me/${waNumber}?text=Namaste! I would like to enquire about your stock.`}
                 target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
                 className="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-6 py-3 text-sm font-bold tracking-wider transition">
-                <i className="fa-brands fa-whatsapp text-lg" aria-hidden="true" /> WhatsApp
+                <Icon name="fa-whatsapp" className="text-lg" /> WhatsApp
               </a>
             )}
             {email && (
               <a href={`mailto:${email}`} aria-label="Email ANMOL Art"
                 className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 text-sm font-bold tracking-wider transition">
-                <i className="fa-solid fa-envelope text-royal-gold" aria-hidden="true" /> Email Us
+                <Icon name="fa-envelope" className="text-royal-gold" /> Email Us
               </a>
             )}
           </div>
@@ -160,7 +173,7 @@ export default function Stock() {
         {/* ── Category Not Found ── */}
         {urlCategoryNotFound && (
           <div className="max-w-lg mx-auto text-center py-20">
-            <i className="fa-solid fa-folder-open text-royal-gold text-5xl mb-4 block" aria-hidden="true" />
+            <Icon name="fa-folder-open" className="text-royal-gold text-5xl mb-4 block" />
             <p className="font-serif text-2xl font-bold text-royal-maroon mb-3">Category Not Found</p>
             <p className="text-earthy-brown/60 mb-6">
               The category <strong>"{urlCategory}"</strong> doesn't exist. Browse all available categories below.
@@ -202,7 +215,7 @@ export default function Stock() {
             {/* ── No Supabase config ── */}
             {!loading && !isSupabaseConfigured && (
               <div className="max-w-2xl mx-auto border border-royal-gold/30 rounded-2xl p-8 text-center bg-white shadow-sm my-16">
-                <i className="fa-solid fa-circle-exclamation text-royal-gold text-4xl mb-4 block" aria-hidden="true" />
+                <Icon name="fa-circle-exclamation" className="text-royal-gold text-4xl mb-4 block" />
                 <p className="text-royal-maroon font-serif text-xl font-bold mb-2">Stock Gallery Offline</p>
                 <p className="text-earthy-brown/70 text-sm leading-relaxed font-light">
                   Configure Supabase credentials in <code className="bg-ivory px-2 py-1 rounded text-xs font-mono">.env</code> to enable the gallery.
@@ -213,7 +226,7 @@ export default function Stock() {
             {/* ── Empty state ── */}
             {!loading && isSupabaseConfigured && images.length === 0 && (
               <div className="text-center py-32 text-earthy-brown/30">
-                <i className="fa-solid fa-image text-6xl mb-4 block" aria-hidden="true" />
+                <Icon name="fa-image" className="text-6xl mb-4 block" />
                 <p className="text-sm uppercase tracking-widest">No images in this category yet</p>
               </div>
             )}
@@ -261,7 +274,7 @@ export default function Stock() {
                     >
                       {loadingMore
                         ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Loading…</>
-                        : <><i className="fa-solid fa-chevron-down" aria-hidden="true" /> Load More</>
+                        : <><Icon name="fa-chevron-down" /> Load More</>
                       }
                     </button>
                   </div>
@@ -282,20 +295,20 @@ export default function Stock() {
               {phone && (
                 <a href={`tel:${phone.replace(/\s/g, "")}`}
                   className="flex items-center gap-2 bg-royal-maroon text-white px-8 py-3 font-bold text-sm uppercase tracking-widest hover:bg-royal-gold hover:text-royal-maroon transition">
-                  <i className="fa-solid fa-phone" aria-hidden="true" /> Call Now
+                  <Icon name="fa-phone" /> Call Now
                 </a>
               )}
               {waNumber && (
                 <a href={`https://wa.me/${waNumber}?text=Namaste! I found something I like in your stock gallery. Please share more details.`}
                   target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-green-600 text-white px-8 py-3 font-bold text-sm uppercase tracking-widest hover:bg-green-500 transition">
-                  <i className="fa-brands fa-whatsapp text-lg" aria-hidden="true" /> WhatsApp
+                  <Icon name="fa-whatsapp" className="text-lg" /> WhatsApp
                 </a>
               )}
               {email && (
                 <a href={`mailto:${email}`}
                   className="flex items-center gap-2 border border-royal-maroon text-royal-maroon px-8 py-3 font-bold text-sm uppercase tracking-widest hover:bg-royal-maroon hover:text-white transition">
-                  <i className="fa-solid fa-envelope" aria-hidden="true" /> Email Us
+                  <Icon name="fa-envelope" /> Email Us
                 </a>
               )}
             </div>
@@ -319,11 +332,11 @@ export default function Stock() {
           >
             <button onClick={closeLightbox} aria-label="Close image viewer"
               className="absolute top-5 right-5 text-white text-3xl w-10 h-10 flex items-center justify-center hover:text-royal-gold transition z-10">
-              <i className="fa-solid fa-xmark" aria-hidden="true" />
+              <Icon name="fa-xmark" />
             </button>
             <button onClick={prevImg} aria-label="Previous image"
               className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition z-10">
-              <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+              <Icon name="fa-chevron-left" />
             </button>
 
             <motion.div
@@ -349,7 +362,7 @@ export default function Stock() {
                     className="mt-4 inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 text-sm font-bold uppercase tracking-wider hover:bg-green-500 transition rounded-full"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <i className="fa-brands fa-whatsapp" aria-hidden="true" /> Enquire on WhatsApp
+                    <Icon name="fa-whatsapp" /> Enquire on WhatsApp
                   </a>
                 )}
               </div>
@@ -357,7 +370,7 @@ export default function Stock() {
 
             <button onClick={nextImg} aria-label="Next image"
               className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition z-10">
-              <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+              <Icon name="fa-chevron-right" />
             </button>
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/40 text-xs tracking-widest" aria-live="polite">
               {lightbox + 1} / {images.length}

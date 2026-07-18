@@ -1,22 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;700&family=Great+Vibes&display=swap');
+/* NOTE: font <link> tags live in index.html so the preload scanner finds them
+   before this stylesheet is parsed. Do not re-add an @import here. */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Design Tokens ──────────────────────────────────────────────────────────── */
+/* ─── Design Tokens ──────────────────────────────────────────────────────────────
+   Single source of truth for the palette. tailwind.config.js references these
+   same variables, so `text-earthy-brown` and `color: var(--earthy-brown)` can
+   never drift apart again. Values are raw channels so Tailwind can apply its
+   opacity modifiers (e.g. text-earthy-brown/50).
+   ───────────────────────────────────────────────────────────────────────────── */
 :root {
-  --royal-maroon: #5d001e;
-  --royal-gold: #d4af37;
-  --ivory: #fdfbf7;
-  --earthy-brown: #3d2b1f;
+  --royal-maroon: 93 0 30;        /* #5D001E */
+  --royal-gold: 212 175 55;       /* #D4AF37 */
+  --royal-gold-dark: 180 148 31;  /* #B4941F */
+  --ivory: 253 251 247;           /* #FDFBF7 */
+  --earthy-brown: 61 43 31;       /* #3D2B1F */
+  --antique-cream: 243 229 171;   /* #F3E5AB */
+  --parchment: 251 246 230;       /* #FBF6E6 — alternating section background */
 }
 
 /* ─── Base Styles ────────────────────────────────────────────────────────────── */
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--ivory);
-  color: var(--earthy-brown);
+  background-color: rgb(var(--ivory));
+  color: rgb(var(--earthy-brown));
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -36,16 +45,16 @@ h1, h2, h3, .font-serif {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--ivory);
+  background: rgb(var(--ivory));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--royal-gold);
+  background: rgb(var(--royal-gold));
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--royal-maroon);
+  background: rgb(var(--royal-maroon));
 }
 
 /* ─── Animations ─────────────────────────────────────────────────────────────── */
@@ -150,7 +159,7 @@ h1, h2, h3, .font-serif {
 
 /* ─── Focus Styles (Accessibility) ──────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--royal-gold);
+  outline: 2px solid rgb(var(--royal-gold));
   outline-offset: 2px;
   border-radius: 2px;
 }

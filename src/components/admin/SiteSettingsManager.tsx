@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { getSiteConfig, saveSiteConfig } from "../../services/siteConfig.service";
 import { invalidateSiteConfig } from "../../hooks/useSiteConfig";
 import type { SiteConfig, ToastState } from "./types";
+import Icon from "../ui/Icon";
 
 interface Props {
   showToast: (msg: string, type?: ToastState["type"]) => void;
@@ -120,12 +121,12 @@ export default function SiteSettingsManager({ showToast }: Props) {
       {dirty.size > 0 && (
         <div className="sticky top-20 z-30 bg-royal-maroon text-white px-6 py-3 rounded-2xl shadow-xl flex items-center justify-between">
           <p className="text-sm font-bold">
-            <i className="fa-solid fa-circle-exclamation text-royal-gold mr-2" aria-hidden="true" />
+            <Icon name="fa-circle-exclamation" className="text-royal-gold mr-2" />
             {dirty.size} unsaved change{dirty.size > 1 ? "s" : ""}
           </p>
           <button onClick={saveAll} disabled={saving}
             className="flex items-center gap-2 bg-royal-gold text-royal-maroon px-5 py-2 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-white transition disabled:opacity-40">
-            {saving ? <div className="w-4 h-4 border-2 border-royal-maroon border-t-transparent rounded-full animate-spin" /> : <><i className="fa-solid fa-floppy-disk" aria-hidden="true" /> Save All</>}
+            {saving ? <div className="w-4 h-4 border-2 border-royal-maroon border-t-transparent rounded-full animate-spin" /> : <><Icon name="fa-floppy-disk" /> Save All</>}
           </button>
         </div>
       )}
@@ -138,7 +139,7 @@ export default function SiteSettingsManager({ showToast }: Props) {
         FIELD_GROUPS.map((group) => (
           <div key={group.label} className="bg-white rounded-3xl shadow-sm border border-royal-gold/15 p-8">
             <h3 className="font-serif text-xl font-bold text-royal-maroon mb-6 flex items-center gap-2">
-              <i className={`fa-solid ${group.icon} text-royal-gold`} aria-hidden="true" />
+              <Icon name={group.icon} className="text-royal-gold" />
               {group.label}
             </h3>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -178,7 +179,7 @@ export default function SiteSettingsManager({ showToast }: Props) {
         <div className="flex justify-end">
           <button onClick={saveAll} disabled={saving}
             className="flex items-center gap-2 bg-royal-maroon text-white px-8 py-3 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-royal-gold hover:text-royal-maroon transition disabled:opacity-40">
-            {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><i className="fa-solid fa-floppy-disk" aria-hidden="true" /> Save All Changes</>}
+            {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Icon name="fa-floppy-disk" /> Save All Changes</>}
           </button>
         </div>
       )}

@@ -7,6 +7,7 @@ import {
 } from "../../services/heroSlides.service";
 import { buildObjectPath, uploadImage } from "../../services/storage.service";
 import type { HeroSlide, ToastState } from "./types";
+import Icon from "../ui/Icon";
 
 interface Props {
   showToast: (msg: string, type?: ToastState["type"]) => void;
@@ -123,7 +124,7 @@ export default function HeroManager({ showToast }: Props) {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="font-serif text-2xl font-bold text-royal-maroon flex items-center gap-2">
-              <i className="fa-solid fa-images text-royal-gold" aria-hidden="true" /> Hero Slides
+              <Icon name="fa-images" className="text-royal-gold" /> Hero Slides
             </h2>
             <p className="text-earthy-brown/40 text-xs uppercase tracking-widest mt-0.5">
               Manage homepage hero carousel
@@ -134,7 +135,7 @@ export default function HeroManager({ showToast }: Props) {
             className="flex items-center gap-2 bg-royal-maroon text-white px-5 py-2.5 rounded-xl
               font-bold text-sm uppercase tracking-wider hover:bg-royal-gold hover:text-royal-maroon transition"
           >
-            <i className="fa-solid fa-plus" aria-hidden="true" /> Add Slide
+            <Icon name="fa-plus" /> Add Slide
           </button>
         </div>
 
@@ -144,7 +145,7 @@ export default function HeroManager({ showToast }: Props) {
           </div>
         ) : slides.length === 0 ? (
           <div className="text-center py-16 text-earthy-brown/30">
-            <i className="fa-solid fa-panorama text-5xl mb-3 block" aria-hidden="true" />
+            <Icon name="fa-panorama" className="text-5xl mb-3 block" />
             <p className="text-sm uppercase tracking-widest">No slides yet — add one above</p>
           </div>
         ) : (
@@ -153,7 +154,7 @@ export default function HeroManager({ showToast }: Props) {
               <div
                 key={slide.id}
                 className={`flex items-center gap-4 p-4 rounded-2xl border transition
-                  ${slide.active ? "border-royal-gold/20 bg-[#FBF6E6]" : "border-gray-200 bg-gray-50 opacity-60"}`}
+                  ${slide.active ? "border-royal-gold/20 bg-parchment" : "border-gray-200 bg-gray-50 opacity-60"}`}
               >
                 {slide.image_url ? (
                   <img
@@ -163,7 +164,7 @@ export default function HeroManager({ showToast }: Props) {
                   />
                 ) : (
                   <div className="w-20 h-14 bg-royal-gold/10 rounded-xl flex-shrink-0 flex items-center justify-center">
-                    <i className="fa-solid fa-image text-royal-gold/40 text-xl" aria-hidden="true" />
+                    <Icon name="fa-image" className="text-royal-gold/40 text-xl" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
@@ -178,13 +179,13 @@ export default function HeroManager({ showToast }: Props) {
                     className={`w-8 h-8 rounded-full border flex items-center justify-center transition text-xs
                       ${slide.active ? "border-green-400 text-green-500 hover:bg-green-50" : "border-gray-300 text-gray-400 hover:bg-gray-100"}`}
                   >
-                    <i className={`fa-solid ${slide.active ? "fa-eye" : "fa-eye-slash"}`} aria-hidden="true" />
+                    <Icon name={slide.active ? "fa-eye" : "fa-eye-slash"} />
                   </button>
                   <button
                     onClick={() => openEdit(slide)}
                     className="w-8 h-8 rounded-full border border-royal-gold/30 text-royal-maroon flex items-center justify-center hover:bg-royal-gold/10 transition text-xs"
                   >
-                    <i className="fa-solid fa-pen" aria-hidden="true" />
+                    <Icon name="fa-pen" />
                   </button>
                   {confirmId === slide.id ? (
                     <div className="flex items-center gap-1">
@@ -196,7 +197,7 @@ export default function HeroManager({ showToast }: Props) {
                       onClick={() => setConfirmId(slide.id)}
                       className="w-8 h-8 rounded-full border border-red-200 text-red-400 flex items-center justify-center hover:bg-red-50 transition text-xs"
                     >
-                      <i className="fa-solid fa-trash" aria-hidden="true" />
+                      <Icon name="fa-trash" />
                     </button>
                   )}
                 </div>
@@ -244,7 +245,7 @@ export default function HeroManager({ showToast }: Props) {
             <div className="flex gap-3">
               <label className="flex items-center gap-2 bg-royal-gold/10 border border-royal-gold/30 text-royal-maroon
                 px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer hover:bg-royal-gold/20 transition">
-                <i className="fa-solid fa-cloud-arrow-up" aria-hidden="true" />
+                <Icon name="fa-cloud-arrow-up" />
                 {uploading ? "Uploading…" : "Upload Image"}
                 <input type="file" accept="image/*" className="hidden"
                   onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])} />
@@ -274,7 +275,7 @@ export default function HeroManager({ showToast }: Props) {
                 font-bold text-sm uppercase tracking-wider hover:bg-royal-gold hover:text-royal-maroon transition disabled:opacity-40">
               {saving
                 ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                : <><i className="fa-solid fa-floppy-disk" aria-hidden="true" /> {editing ? "Save Changes" : "Create Slide"}</>
+                : <><Icon name="fa-floppy-disk" /> {editing ? "Save Changes" : "Create Slide"}</>
               }
             </button>
             <button

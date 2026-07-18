@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { createContactSubmission } from "../services/contactSubmissions.service";
 import { useSiteConfig } from "../hooks/useSiteConfig";
+import Icon from "./ui/Icon";
 
 interface FormState {
   name: string;
@@ -76,7 +76,7 @@ export default function Contact() {
             <div className="grid lg:grid-cols-3 gap-8 mb-20">
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-royal-maroon transition-all duration-500 group">
                 <div className="w-14 h-14 bg-royal-gold/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-royal-maroon">
-                  <FaMapMarkerAlt className="text-royal-gold text-2xl group-hover:text-white" />
+                  <Icon name="fa-location-dot" className="text-royal-gold text-2xl group-hover:text-white" />
                 </div>
                 <h4 className="font-serif text-2xl font-bold mb-4">Visit Showroom</h4>
                 <p className="text-sm leading-relaxed opacity-80 group-hover:opacity-100">{address}</p>
@@ -85,7 +85,7 @@ export default function Contact() {
 
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-royal-maroon transition-all duration-500 group">
                 <div className="w-14 h-14 bg-royal-gold/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-royal-maroon">
-                  <FaPhoneAlt className="text-royal-gold text-2xl group-hover:text-white" />
+                  <Icon name="fa-phone" className="text-royal-gold text-2xl group-hover:text-white" />
                 </div>
                 <h4 className="font-serif text-2xl font-bold mb-4">Quick Connect</h4>
                 <a href={`tel:${phone.replace(/\s/g, "")}`} className="text-xl font-bold block hover:text-royal-gold transition group-hover:text-royal-maroon">{phone}</a>
@@ -94,13 +94,13 @@ export default function Contact() {
                   target="_blank" rel="noopener noreferrer"
                   className="mt-3 inline-flex items-center gap-2 bg-green-500 text-white text-xs font-bold px-4 py-1.5 rounded-full hover:bg-green-600 transition"
                 >
-                  <FaWhatsapp /> WhatsApp
+                  <Icon name="fa-whatsapp" /> WhatsApp
                 </a>
               </div>
 
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-10 rounded-3xl hover:bg-white hover:text-royal-maroon transition-all duration-500 group">
                 <div className="w-14 h-14 bg-royal-gold/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-royal-maroon">
-                  <FaEnvelope className="text-royal-gold text-2xl group-hover:text-white" />
+                  <Icon name="fa-envelope" className="text-royal-gold text-2xl group-hover:text-white" />
                 </div>
                 <h4 className="font-serif text-2xl font-bold mb-4">Email Inquiry</h4>
                 <a href={`mailto:${email}`} className="text-base font-medium opacity-80 group-hover:opacity-100 hover:text-royal-gold transition break-all">{email}</a>
@@ -115,7 +115,7 @@ export default function Contact() {
               {status === "success" ? (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 bg-green-500/20 border border-green-400/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i className="fa-solid fa-check text-green-400 text-2xl" aria-hidden="true" />
+                    <Icon name="fa-check" className="text-green-400 text-2xl" />
                   </div>
                   <p className="text-white font-bold text-xl mb-2">Message Sent!</p>
                   <p className="text-gray-300 text-sm">We'll be in touch soon. You can also reach us directly on WhatsApp.</p>
@@ -195,7 +195,7 @@ export default function Contact() {
 
                   {status === "error" && (
                     <p role="alert" className="text-red-300 text-sm mb-4 flex items-center gap-2">
-                      <i className="fa-solid fa-triangle-exclamation" aria-hidden="true" /> {errMsg}
+                      <Icon name="fa-triangle-exclamation" /> {errMsg}
                     </p>
                   )}
 
@@ -210,7 +210,7 @@ export default function Contact() {
                       {status === "submitting" ? (
                         <><div className="w-4 h-4 border-2 border-royal-maroon border-t-transparent rounded-full animate-spin" /> Sending…</>
                       ) : (
-                        <><i className="fa-solid fa-paper-plane" aria-hidden="true" /> Send Message</>
+                        <><Icon name="fa-paper-plane" /> Send Message</>
                       )}
                     </button>
                     <a
@@ -221,7 +221,7 @@ export default function Contact() {
                         px-10 py-4 font-bold uppercase tracking-widest text-sm
                         hover:bg-green-500 transition rounded-xl"
                     >
-                      <FaWhatsapp className="text-lg" /> WhatsApp Instead
+                      <Icon name="fa-whatsapp" className="text-lg" /> WhatsApp Instead
                     </a>
                   </div>
                 </form>
@@ -233,9 +233,9 @@ export default function Contact() {
               <p className="uppercase tracking-[0.3em] text-xs text-royal-gold font-bold mb-8">Follow Our Journey</p>
               <div className="flex gap-6">
                 {[
-                  { icon: <FaInstagram aria-hidden="true" />, link: instagram,  label: "Follow us on Instagram" },
-                  { icon: <FaFacebookF aria-hidden="true" />, link: facebook,   label: "Follow us on Facebook" },
-                  { icon: <FaWhatsapp  aria-hidden="true" />, link: `https://wa.me/${waNumber}`, label: "Chat with us on WhatsApp" },
+                  { icon: <Icon name="fa-instagram" aria-hidden="true" />, link: instagram,  label: "Follow us on Instagram" },
+                  { icon: <Icon name="fa-facebook-f" aria-hidden="true" />, link: facebook,   label: "Follow us on Facebook" },
+                  { icon: <Icon name="fa-whatsapp"  aria-hidden="true" />, link: `https://wa.me/${waNumber}`, label: "Chat with us on WhatsApp" },
                 ].map((social) => (
                   <a
                     key={social.link}

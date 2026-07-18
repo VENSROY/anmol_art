@@ -5,6 +5,7 @@ import {
   deleteSubmission,
 } from "../../services/contactSubmissions.service";
 import type { ContactSubmission, ToastState } from "./types";
+import Icon from "../ui/Icon";
 
 interface Props {
   showToast: (msg: string, type?: ToastState["type"]) => void;
@@ -62,7 +63,7 @@ export default function InquiriesManager({ showToast }: Props) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h2 className="font-serif text-2xl font-bold text-royal-maroon flex items-center gap-2">
-            <i className="fa-solid fa-inbox text-royal-gold" aria-hidden="true" /> Inquiries
+            <Icon name="fa-inbox" className="text-royal-gold" /> Inquiries
             {unreadCount > 0 && (
               <span className="bg-royal-gold text-royal-maroon text-xs font-black px-2 py-0.5 rounded-full">
                 {unreadCount} new
@@ -91,14 +92,14 @@ export default function InquiriesManager({ showToast }: Props) {
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 text-earthy-brown/30">
-          <i className="fa-solid fa-inbox text-5xl mb-3 block" aria-hidden="true" />
+          <Icon name="fa-inbox" className="text-5xl mb-3 block" />
           <p className="text-sm uppercase tracking-widest">No {filter === "all" ? "" : filter} inquiries</p>
         </div>
       ) : (
         <div className="space-y-3">
           {filtered.map((s) => (
             <div key={s.id}
-              className={`rounded-2xl border transition ${s.read ? "border-gray-200 bg-white" : "border-royal-gold/30 bg-[#FBF6E6]"}`}>
+              className={`rounded-2xl border transition ${s.read ? "border-gray-200 bg-white" : "border-royal-gold/30 bg-parchment"}`}>
               <div
                 className="flex items-center gap-4 p-4 cursor-pointer"
                 onClick={() => {
@@ -122,7 +123,7 @@ export default function InquiriesManager({ showToast }: Props) {
                 </div>
 
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <i className={`fa-solid fa-chevron-${expanded === s.id ? "up" : "down"} text-earthy-brown/30 text-xs`} aria-hidden="true" />
+                  <Icon name={`fa-chevron-${expanded === s.id ? "up" : "down"}`} className="text-earthy-brown/30 text-xs" />
                 </div>
               </div>
 
@@ -133,19 +134,19 @@ export default function InquiriesManager({ showToast }: Props) {
                     {s.email && (
                       <a href={`mailto:${s.email}?subject=Re: Your enquiry to ANMOL Art`}
                         className="flex items-center gap-2 bg-royal-maroon text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-royal-gold hover:text-royal-maroon transition">
-                        <i className="fa-solid fa-envelope" aria-hidden="true" /> Reply by Email
+                        <Icon name="fa-envelope" /> Reply by Email
                       </a>
                     )}
                     {s.phone && (
                       <a href={`https://wa.me/${s.phone.replace(/\D/g, "")}?text=Hello ${s.name}, Thank you for contacting ANMOL Art!`}
                         target="_blank" rel="noopener noreferrer"
                         className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-green-500 transition">
-                        <i className="fa-brands fa-whatsapp" aria-hidden="true" /> WhatsApp
+                        <Icon name="fa-whatsapp" /> WhatsApp
                       </a>
                     )}
                     <button onClick={() => markRead(s.id, !s.read)}
                       className="flex items-center gap-2 border border-gray-200 text-earthy-brown/60 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider hover:border-royal-gold transition">
-                      <i className={`fa-solid ${s.read ? "fa-envelope" : "fa-envelope-open"}`} aria-hidden="true" />
+                      <Icon name={s.read ? "fa-envelope" : "fa-envelope-open"} />
                       Mark as {s.read ? "Unread" : "Read"}
                     </button>
                     {confirmId === s.id ? (
@@ -157,7 +158,7 @@ export default function InquiriesManager({ showToast }: Props) {
                     ) : (
                       <button onClick={() => setConfirmId(s.id)}
                         className="flex items-center gap-2 border border-red-200 text-red-400 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-red-50 transition">
-                        <i className="fa-solid fa-trash" aria-hidden="true" /> Delete
+                        <Icon name="fa-trash" /> Delete
                       </button>
                     )}
                   </div>

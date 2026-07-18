@@ -36,19 +36,23 @@
     <meta name="geo.placename" content="Jodhpur, Rajasthan" />
     <meta name="geo.position" content="26.2389;73.0243" />
 
-    <!-- Google Fonts (single preconnect block, fonts aligned with index.css) -->
+    <!-- LCP: first hero slide. Vite rewrites this path to the hashed asset at
+         build time, so it stays in sync with the bundled image. -->
+    <link rel="preload" as="image" href="/src/assets/showroom.jpg" fetchpriority="high" />
+
+    <!-- Google Fonts — declared here (not @import-ed in CSS) so the browser can
+         discover them during preload scan instead of after the stylesheet parses. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- NOTE: The actual font CSS import lives in src/index.css (Playfair Display, Inter, Great Vibes).
-         Do NOT add another font link here to avoid double-loading. -->
-
-    <!-- Font Awesome Icons -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;700&family=Great+Vibes&display=swap"
     />
+
+    <!-- Icons are bundled via react-icons (see src/components/ui/Icon.tsx).
+         The Font Awesome CDN stylesheet was removed: it was render-blocking,
+         pulled font files from a third party, and duplicated an icon set the
+         bundle already contained. -->
 
     <!-- Structured Data (LocalBusiness) -->
     <script type="application/ld+json">

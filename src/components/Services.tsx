@@ -7,6 +7,7 @@ import TiltCard from "./motion/TiltCard";
 import CursorGlow from "./motion/CursorGlow";
 import SectionDivider from "./motion/SectionDivider";
 import type { Service } from "./admin/types";
+import Icon from "./ui/Icon";
 
 const FALLBACK_SERVICES: Service[] = [
   { id: "1", title: "Wholesale & Export",   description: "Reliable bulk supply and international handling for boutiques and resellers worldwide with secure packaging.",                                   icon: "fa-ship",             category: "Global",       display_order: 0, active: true, created_at: "" },
@@ -54,7 +55,7 @@ export default function Services() {
                   </div>
 
                   <div className="text-5xl mb-10 text-royal-gold group-hover:text-royal-maroon transition-transform duration-500 group-hover:-translate-y-2">
-                    <i className={`fa-solid ${item.icon}`} aria-hidden="true" />
+                    <Icon name={item.icon} />
                   </div>
 
                   <h3 className="font-serif text-3xl font-bold mb-6 text-white group-hover:text-royal-maroon transition-colors">

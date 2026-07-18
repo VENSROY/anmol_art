@@ -1,4 +1,5 @@
 import type { ToastState } from "./types";
+import Icon from "../ui/Icon";
 
 interface Props {
   toast: ToastState;
@@ -27,10 +28,7 @@ export default function Toast({ toast }: Props) {
         text-sm font-bold flex items-center gap-2.5 text-white animate-fade-in
         ${colors[toast.type] ?? "bg-royal-maroon"}`}
     >
-      <i
-        className={`fa-solid ${icons[toast.type] ?? "fa-circle-check"} text-white/80`}
-        aria-hidden="true"
-      />
+      <Icon name={icons[toast.type] ?? "fa-circle-check"} className="text-white/80" />
       {toast.message}
     </div>
   );

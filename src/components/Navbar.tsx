@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSiteConfig } from "../hooks/useSiteConfig";
+import Icon from "./ui/Icon";
 
 export default function Navbar() {
   const [open, setOpen]       = useState(false);
@@ -62,7 +63,7 @@ export default function Navbar() {
             aria-label="ANMOL Art – Home"
             className="text-2xl md:text-3xl font-serif font-bold text-royal-maroon flex items-center gap-2 tracking-tight"
           >
-            <i className="fa-solid fa-crown text-royal-gold text-xl" aria-hidden="true" /> ANMOL Art
+            <Icon name="fa-crown" className="text-royal-gold text-xl" /> ANMOL Art
           </button>
 
           {/* Desktop nav */}
@@ -100,7 +101,7 @@ export default function Navbar() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
           >
-            <i className={`fa-solid ${open ? "fa-xmark" : "fa-bars"}`} aria-hidden="true" />
+            <Icon name={open ? "fa-xmark" : "fa-bars"} />
           </button>
         </div>
 
@@ -121,7 +122,7 @@ export default function Navbar() {
             {waNumber && (
               <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer"
                 className="mt-2 py-3 bg-royal-maroon text-white flex items-center justify-center gap-2 hover:bg-royal-gold hover:text-royal-maroon transition">
-                <i className="fa-brands fa-whatsapp" aria-hidden="true" /> WhatsApp
+                <Icon name="fa-whatsapp" /> WhatsApp
               </a>
             )}
           </div>

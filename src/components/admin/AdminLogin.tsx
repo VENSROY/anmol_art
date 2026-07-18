@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import Icon from "../ui/Icon";
 
 interface Props {
   onLogin: () => void;
@@ -40,7 +41,7 @@ export default function AdminLogin({ onLogin }: Props) {
       <div className="relative bg-[#1e0d16] w-full max-w-sm rounded-3xl shadow-2xl border border-royal-gold/20 p-10">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-royal-gold/10 border border-royal-gold/30 rounded-full flex items-center justify-center mx-auto mb-5">
-            <i className="fa-solid fa-crown text-royal-gold text-2xl" aria-hidden="true" />
+            <Icon name="fa-crown" className="text-royal-gold text-2xl" />
           </div>
           <h1 className="font-serif text-3xl font-bold text-white tracking-wide">Admin Panel</h1>
           <p className="text-white/30 text-xs mt-1.5 uppercase tracking-widest">ANMOL Art · Content Manager</p>
@@ -80,13 +81,13 @@ export default function AdminLogin({ onLogin }: Props) {
               aria-label={show ? "Hide password" : "Show password"}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-royal-gold transition"
             >
-              <i className={`fa-solid ${show ? "fa-eye-slash" : "fa-eye"} text-sm`} aria-hidden="true" />
+              <Icon name={show ? "fa-eye-slash" : "fa-eye"} className="text-sm" />
             </button>
           </div>
 
           {error && (
             <p role="alert" className="text-red-400 text-xs flex items-center gap-1.5">
-              <i className="fa-solid fa-triangle-exclamation" aria-hidden="true" /> {error}
+              <Icon name="fa-triangle-exclamation" /> {error}
             </p>
           )}
 
@@ -99,7 +100,7 @@ export default function AdminLogin({ onLogin }: Props) {
             {busy ? (
               <><div className="w-4 h-4 border-2 border-[#1a0a12] border-t-transparent rounded-full animate-spin" aria-hidden="true" /> Signing in…</>
             ) : (
-              <><i className="fa-solid fa-lock-open text-xs" aria-hidden="true" /> Sign In</>
+              <><Icon name="fa-lock-open" className="text-xs" /> Sign In</>
             )}
           </button>
         </form>

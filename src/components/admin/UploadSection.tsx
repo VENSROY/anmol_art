@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { addStockImage } from "../../services/stockImages.service";
 import type { Category, ToastState } from "./types";
+import Icon from "../ui/Icon";
 
 interface Props {
   categories: Category[];
@@ -79,7 +80,7 @@ export default function UploadSection({ categories, onUploaded, showToast }: Pro
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-royal-gold/15 p-8">
       <h2 className="font-serif text-2xl font-bold text-royal-maroon mb-1 flex items-center gap-2">
-        <i className="fa-solid fa-cloud-arrow-up text-royal-gold" aria-hidden="true" />
+        <Icon name="fa-cloud-arrow-up" className="text-royal-gold" />
         Upload Stock Images
       </h2>
       <p className="text-earthy-brown/40 text-xs uppercase tracking-widest mb-6">
@@ -133,9 +134,9 @@ export default function UploadSection({ categories, onUploaded, showToast }: Pro
           <label
             className="flex items-center gap-2 w-full border border-dashed border-royal-gold/40
               rounded-xl px-4 py-3 text-sm text-earthy-brown/50 cursor-pointer
-              hover:border-royal-gold hover:text-royal-maroon transition bg-[#FBF6E6]"
+              hover:border-royal-gold hover:text-royal-maroon transition bg-parchment"
           >
-            <i className="fa-solid fa-paperclip text-royal-gold" aria-hidden="true" />
+            <Icon name="fa-paperclip" className="text-royal-gold" />
             <span>Browse or drop images</span>
             <input
               ref={fileRef}
@@ -194,7 +195,7 @@ export default function UploadSection({ categories, onUploaded, showToast }: Pro
           {uploading ? (
             <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Uploading…</>
           ) : (
-            <><i className="fa-solid fa-upload" aria-hidden="true" /> Upload {previews.length > 0 ? `(${previews.length})` : ""}</>
+            <><Icon name="fa-upload" /> Upload {previews.length > 0 ? `(${previews.length})` : ""}</>
           )}
         </button>
 

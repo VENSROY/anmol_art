@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useSiteConfig } from "../hooks/useSiteConfig";
 import Reveal from "./motion/Reveal";
 import SectionDivider from "./motion/SectionDivider";
+import Icon from "./ui/Icon";
 
 export default function Footer() {
   const { get } = useSiteConfig();
@@ -18,7 +19,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
         <Reveal className="flex flex-col items-center md:items-start" y={16}>
           <h3 className="text-2xl font-serif font-bold text-royal-gold flex items-center gap-2 mb-6">
-            <i className="fa-solid fa-crown" aria-hidden="true" />
+            <Icon name="fa-crown" />
             ANMOL Art
           </h3>
           <p className="text-sm opacity-80 leading-relaxed text-center md:text-left">
@@ -42,13 +43,13 @@ export default function Footer() {
           <ul className="space-y-4 text-sm opacity-80">
             {address && (
               <li className="flex items-start gap-3 justify-center md:justify-start">
-                <i className="fa-solid fa-location-dot text-royal-gold mt-1 flex-shrink-0" aria-hidden="true" />
+                <Icon name="fa-location-dot" className="text-royal-gold mt-1 flex-shrink-0" />
                 <span>{address}</span>
               </li>
             )}
             {phone && (
               <li className="flex items-center gap-3 justify-center md:justify-start">
-                <i className="fa-solid fa-phone text-royal-gold flex-shrink-0" aria-hidden="true" />
+                <Icon name="fa-phone" className="text-royal-gold flex-shrink-0" />
                 <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-royal-gold transition">{phone}</a>
               </li>
             )}
@@ -61,19 +62,19 @@ export default function Footer() {
             {instagram && (
               <a href={instagram} target="_blank" rel="noreferrer" aria-label="Follow ANMOL Art on Instagram"
                 className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
-                <i className="fa-brands fa-instagram" aria-hidden="true" />
+                <Icon name="fa-instagram" />
               </a>
             )}
             {waNumber && (
               <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer" aria-label="Chat with ANMOL Art on WhatsApp"
                 className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
-                <i className="fa-brands fa-whatsapp" aria-hidden="true" />
+                <Icon name="fa-whatsapp" />
               </a>
             )}
             {facebook && (
               <a href={facebook} target="_blank" rel="noreferrer" aria-label="Follow ANMOL Art on Facebook"
                 className="w-10 h-10 rounded-full border border-royal-gold/30 flex items-center justify-center hover:bg-royal-gold hover:text-royal-maroon transition duration-300">
-                <i className="fa-brands fa-facebook-f" aria-hidden="true" />
+                <Icon name="fa-facebook-f" />
               </a>
             )}
           </div>

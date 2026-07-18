@@ -33,7 +33,7 @@ export default function GalleryPreview() {
     <section
       id="gallery"
       aria-labelledby="gallery-heading"
-      className="scroll-mt-28 py-28 md:py-32 bg-[#FBF6E6] relative overflow-hidden"
+      className="scroll-mt-28 py-28 md:py-32 bg-parchment relative overflow-hidden"
     >
       <div className="absolute -left-24 top-1/3 w-72 h-72 bg-royal-gold/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
 

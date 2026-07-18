@@ -41,7 +41,7 @@ export default function FAQ() {
   }, []);
 
   return (
-    <section id="faq" className="bg-[#FBF6E6] py-32 scroll-mt-28">
+    <section id="faq" className="bg-parchment py-32 scroll-mt-28">
       <div className="container mx-auto px-6 max-w-4xl">
         <Reveal className="text-center mb-20">
           <span className="text-royal-gold font-serif italic text-lg block mb-2">Help & Support</span>

@@ -6,16 +6,15 @@ import {
   deleteService,
 } from "../../services/services.service";
 import type { Service, ToastState } from "./types";
+import Icon, { SERVICE_ICONS } from "../ui/Icon";
 
 interface Props {
   showToast: (msg: string, type?: ToastState["type"]) => void;
 }
 
-const ICONS = [
-  "fa-ship", "fa-hotel", "fa-utensils", "fa-compass-drafting", "fa-store",
-  "fa-truck", "fa-globe", "fa-building", "fa-house", "fa-star",
-  "fa-paint-brush", "fa-hammer", "fa-gem", "fa-crown", "fa-leaf",
-];
+// Sourced from the icon registry so the picker can never offer a name that
+// has no glyph behind it.
+const ICONS = SERVICE_ICONS;
 
 const EMPTY: Omit<Service, "id" | "created_at"> = {
   title: "", description: "", icon: "fa-star", category: "General", display_order: 0, active: true,
@@ -102,13 +101,13 @@ export default function ServicesManager({ showToast }: Props) {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="font-serif text-2xl font-bold text-royal-maroon flex items-center gap-2">
-              <i className="fa-solid fa-briefcase text-royal-gold" aria-hidden="true" /> Services
+              <Icon name="fa-briefcase" className="text-royal-gold" /> Services
             </h2>
             <p className="text-earthy-brown/40 text-xs uppercase tracking-widest mt-0.5">Manage commercial service offerings</p>
           </div>
           <button onClick={openNew}
             className="flex items-center gap-2 bg-royal-maroon text-white px-5 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-royal-gold hover:text-royal-maroon transition">
-            <i className="fa-solid fa-plus" aria-hidden="true" /> Add Service
+            <Icon name="fa-plus" /> Add Service
           </button>
         </div>
 
@@ -116,7 +115,7 @@ export default function ServicesManager({ showToast }: Props) {
           <div className="flex justify-center py-16"><div className="w-8 h-8 border-2 border-royal-maroon border-t-transparent rounded-full animate-spin" /></div>
         ) : services.length === 0 ? (
           <div className="text-center py-16 text-earthy-brown/30">
-            <i className="fa-solid fa-briefcase-blank text-5xl mb-3 block" aria-hidden="true" />
+            <Icon name="fa-briefcase-blank" className="text-5xl mb-3 block" />
             <p className="text-sm uppercase tracking-widest">No services yet</p>
           </div>
         ) : (
@@ -124,9 +123,9 @@ export default function ServicesManager({ showToast }: Props) {
             {services.map((s) => (
               <div key={s.id}
                 className={`flex items-center gap-4 p-4 rounded-2xl border transition
-                  ${s.active ? "border-royal-gold/20 bg-[#FBF6E6]" : "border-gray-200 bg-gray-50 opacity-60"}`}>
+                  ${s.active ? "border-royal-gold/20 bg-parchment" : "border-gray-200 bg-gray-50 opacity-60"}`}>
                 <div className="w-12 h-12 bg-royal-gold/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <i className={`fa-solid ${s.icon} text-royal-gold text-lg`} aria-hidden="true" />
+                  <Icon name={s.icon} className="text-royal-gold text-lg" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-royal-maroon text-sm">{s.title}</p>
@@ -137,11 +136,11 @@ export default function ServicesManager({ showToast }: Props) {
                   <button onClick={() => toggleActive(s)} title={s.active ? "Deactivate" : "Activate"}
                     className={`w-8 h-8 rounded-full border flex items-center justify-center transition text-xs
                       ${s.active ? "border-green-400 text-green-500 hover:bg-green-50" : "border-gray-300 text-gray-400 hover:bg-gray-100"}`}>
-                    <i className={`fa-solid ${s.active ? "fa-eye" : "fa-eye-slash"}`} aria-hidden="true" />
+                    <Icon name={s.active ? "fa-eye" : "fa-eye-slash"} />
                   </button>
                   <button onClick={() => openEdit(s)}
                     className="w-8 h-8 rounded-full border border-royal-gold/30 text-royal-maroon flex items-center justify-center hover:bg-royal-gold/10 transition text-xs">
-                    <i className="fa-solid fa-pen" aria-hidden="true" />
+                    <Icon name="fa-pen" />
                   </button>
                   {confirmId === s.id ? (
                     <div className="flex items-center gap-1">
@@ -151,7 +150,7 @@ export default function ServicesManager({ showToast }: Props) {
                   ) : (
                     <button onClick={() => setConfirmId(s.id)}
                       className="w-8 h-8 rounded-full border border-red-200 text-red-400 flex items-center justify-center hover:bg-red-50 transition text-xs">
-                      <i className="fa-solid fa-trash" aria-hidden="true" />
+                      <Icon name="fa-trash" />
                     </button>
                   )}
                 </div>
@@ -183,7 +182,7 @@ export default function ServicesManager({ showToast }: Props) {
                     title={icon}
                     className={`w-10 h-10 rounded-xl border flex items-center justify-center transition text-sm
                       ${form.icon === icon ? "bg-royal-maroon text-white border-royal-maroon" : "border-gray-200 text-earthy-brown hover:border-royal-gold"}`}>
-                    <i className={`fa-solid ${icon}`} aria-hidden="true" />
+                    <Icon name={icon} />
                   </button>
                 ))}
               </div>
@@ -214,7 +213,7 @@ export default function ServicesManager({ showToast }: Props) {
           <div className="flex gap-3">
             <button onClick={save} disabled={saving}
               className="flex-1 flex items-center justify-center gap-2 bg-royal-maroon text-white py-3 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-royal-gold hover:text-royal-maroon transition disabled:opacity-40">
-              {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><i className="fa-solid fa-floppy-disk" aria-hidden="true" /> {editing ? "Save Changes" : "Create Service"}</>}
+              {saving ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Icon name="fa-floppy-disk" /> {editing ? "Save Changes" : "Create Service"}</>}
             </button>
             <button onClick={cancel} className="px-5 py-3 border border-gray-200 text-earthy-brown/60 rounded-xl text-sm font-bold hover:border-royal-gold transition">Cancel</button>
           </div>

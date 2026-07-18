@@ -16,13 +16,14 @@ import FAQManager      from "./admin/FAQManager";
 import SiteSettingsManager from "./admin/SiteSettingsManager";
 import InquiriesManager    from "./admin/InquiriesManager";
 import type { StockImage, Category, ToastState } from "./admin/types";
+import Icon from "./ui/Icon";
 
 type Tab = "gallery" | "upload" | "categories" | "hero" | "services" | "faq" | "settings" | "inquiries";
 
 function StatCard({ icon, value, label }: { icon: string; value: number | string; label: string }) {
   return (
     <div className="bg-white rounded-2xl p-5 border border-royal-gold/10 shadow-sm text-center hover:shadow-md transition">
-      <i className={`fa-solid ${icon} text-royal-gold text-lg mb-2 block`} aria-hidden="true" />
+      <Icon name={icon} className="text-royal-gold text-lg mb-2 block" />
       <p className="text-3xl font-bold font-serif text-royal-maroon leading-none">{value}</p>
       <p className="text-[10px] uppercase tracking-widest text-earthy-brown/40 mt-1.5 leading-tight">{label}</p>
     </div>
@@ -119,7 +120,7 @@ export default function AdminPanel() {
       <nav className="bg-royal-maroon text-white px-6 py-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-royal-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
-            <i className="fa-solid fa-crown text-royal-gold text-base" aria-hidden="true" />
+            <Icon name="fa-crown" className="text-royal-gold text-base" />
           </div>
           <div>
             <p className="font-serif text-lg font-bold text-white leading-none">ANMOL Art</p>
@@ -146,14 +147,14 @@ export default function AdminPanel() {
               uppercase tracking-widest transition border border-white/10 hover:border-royal-gold/40
               px-3 py-1.5 rounded-lg"
           >
-            <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" aria-hidden="true" /> View Site
+            <Icon name="fa-arrow-up-right-from-square" className="text-[10px]" /> View Site
           </a>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10
               px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition text-white"
           >
-            <i className="fa-solid fa-right-from-bracket" aria-hidden="true" /> Logout
+            <Icon name="fa-right-from-bracket" /> Logout
           </button>
         </div>
       </nav>
@@ -163,7 +164,7 @@ export default function AdminPanel() {
         {/* ── Supabase Warning ── */}
         {!isSupabaseConfigured && (
           <div className="bg-red-50 border border-red-200/60 text-red-800 rounded-2xl p-6 shadow-sm text-center">
-            <i className="fa-solid fa-triangle-exclamation text-red-600 text-3xl mb-2 block" aria-hidden="true" />
+            <Icon name="fa-triangle-exclamation" className="text-red-600 text-3xl mb-2 block" />
             <p className="font-serif text-lg font-bold text-royal-maroon mb-1">Missing Supabase Configuration</p>
             <p className="text-xs text-earthy-brown/80 max-w-lg mx-auto font-light leading-relaxed">
               Set <code className="bg-white/60 px-1.5 py-0.5 rounded font-mono text-[10px]">VITE_SUPABASE_URL</code> and{" "}
@@ -194,10 +195,10 @@ export default function AdminPanel() {
                   uppercase tracking-wider transition whitespace-nowrap
                   ${activeTab === tab.id
                     ? "bg-royal-maroon text-white shadow-md"
-                    : "text-earthy-brown/50 hover:text-royal-maroon hover:bg-[#FBF6E6]"
+                    : "text-earthy-brown/50 hover:text-royal-maroon hover:bg-parchment"
                   }`}
               >
-                <i className={`fa-solid ${tab.icon}`} aria-hidden="true" />
+                <Icon name={tab.icon} />
                 <span className="hidden sm:inline">{tab.label}</span>
                 {tab.badge != null && tab.badge > 0 && (
                   <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full leading-none

@@ -11,6 +11,7 @@ import showroomImg  from "../assets/showroom.jpg";
 import craftImg     from "../assets/CRAFT.webp";
 import decorImg     from "../assets/DECOR_SCULPTURES.webp";
 import furnitureImg from "../assets/FURNITURE_ROYAL_WOOD_ART.webp";
+import Icon from "./ui/Icon";
 
 const HeroOrnament3D = lazy(() => import("./hero/HeroOrnament3D"));
 
@@ -84,23 +85,41 @@ export default function Hero() {
       aria-label="ANMOL Art – Handcrafted Indian Furniture & Decor from Jodhpur, Rajasthan"
       className="scroll-mt-24 min-h-screen flex items-center justify-center relative overflow-hidden group"
     >
-      {/* Slides (parallax layer) */}
+      {/* Slides (parallax layer).
+          Only the current and next slide are mounted: rendering all of them —
+          even at opacity 0 — made the browser download every hero image up
+          front (~750kB). Real <img> elements are used instead of CSS
+          backgrounds so the first one can carry fetchPriority="high" and be
+          the LCP candidate. */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
-            }`}
-          >
+        {slides.map((slide, index) => {
+          const isCurrent = index === currentSlide;
+          const isNext    = index === (currentSlide + 1) % slides.length;
+          if (!isCurrent && !isNext) return null;
+
+          return (
             <div
-              className={`absolute inset-0 bg-cover bg-center ${index === currentSlide ? "animate-kenburns" : ""}`}
-              style={{
-                backgroundImage: `linear-gradient(160deg, rgba(0,0,0,0.72) 0%, rgba(93,0,30,0.55) 100%), url(${slide.image_url})`,
-              }}
-            />
-          </div>
-        ))}
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                isCurrent ? "opacity-100 z-10" : "opacity-0 z-0"
+              }`}
+              aria-hidden="true"
+            >
+              <img
+                src={slide.image_url}
+                alt=""
+                fetchPriority={index === 0 ? "high" : "low"}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding={index === 0 ? "sync" : "async"}
+                className={`absolute inset-0 w-full h-full object-cover ${isCurrent ? "animate-kenburns" : ""}`}
+              />
+              {/* Tint overlay, previously baked into the background gradient */}
+              <div
+                className="absolute inset-0 bg-[linear-gradient(160deg,rgba(0,0,0,0.72)_0%,rgba(93,0,30,0.55)_100%)]"
+              />
+            </div>
+          );
+        })}
       </motion.div>
 
       <CursorGlow className="z-[15]" />
@@ -195,14 +214,14 @@ export default function Hero() {
         aria-label="Previous slide"
         className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition-all duration-300 focus-visible:ring-2 focus-visible:ring-royal-gold"
       >
-        <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+        <Icon name="fa-chevron-left" />
       </button>
       <button
         onClick={nextSlide}
         aria-label="Next slide"
         className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white hover:text-royal-maroon transition-all duration-300 focus-visible:ring-2 focus-visible:ring-royal-gold"
       >
-        <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+        <Icon name="fa-chevron-right" />
       </button>
 
       {/* Dots */}

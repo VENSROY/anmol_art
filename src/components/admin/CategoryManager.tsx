@@ -5,6 +5,7 @@ import {
   countImagesInCategory,
 } from "../../services/categories.service";
 import type { Category, ToastState } from "./types";
+import Icon from "../ui/Icon";
 
 interface Props {
   categories: Category[];
@@ -63,7 +64,7 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-royal-gold/15 p-8">
       <h2 className="font-serif text-2xl font-bold text-royal-maroon mb-1 flex items-center gap-2">
-        <i className="fa-solid fa-tags text-royal-gold" aria-hidden="true" />
+        <Icon name="fa-tags" className="text-royal-gold" />
         Manage Categories
       </h2>
       <p className="text-earthy-brown/40 text-xs uppercase tracking-widest mb-6">
@@ -91,7 +92,7 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
           {creating ? (
             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
           ) : (
-            <i className="fa-solid fa-plus" aria-hidden="true" />
+            <Icon name="fa-plus" />
           )}
           Add Category
         </button>
@@ -100,7 +101,7 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
       {/* Category list */}
       {categories.length === 0 ? (
         <div className="text-center py-10 text-earthy-brown/30">
-          <i className="fa-solid fa-folder-open text-4xl mb-3 block" aria-hidden="true" />
+          <Icon name="fa-folder-open" className="text-4xl mb-3 block" />
           <p className="text-sm uppercase tracking-widest">No categories yet — create one above</p>
         </div>
       ) : (
@@ -108,7 +109,7 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
           {categories.map((cat) => (
             <div
               key={cat.id}
-              className="flex items-center justify-between bg-[#FBF6E6] rounded-xl px-4 py-3
+              className="flex items-center justify-between bg-parchment rounded-xl px-4 py-3
                 border border-royal-gold/15 hover:border-royal-gold/30 transition group"
             >
               <div className="flex items-center gap-3 min-w-0">
@@ -143,7 +144,7 @@ export default function CategoryManager({ categories, onCategoriesChange, showTo
                     hover:text-red-500 flex-shrink-0 ml-2"
                   title={`Delete "${cat.name}"`}
                 >
-                  <i className="fa-solid fa-trash text-xs" aria-hidden="true" />
+                  <Icon name="fa-trash" className="text-xs" />
                 </button>
               )}
             </div>

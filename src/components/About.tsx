@@ -37,7 +37,7 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="bg-[#FBF6E6] py-24 scroll-mt-28 relative overflow-hidden">
+    <section id="about" className="bg-parchment py-24 scroll-mt-28 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-royal-gold/5 blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-7xl">
@@ -97,7 +97,7 @@ export default function About() {
           {pillars.map((p, i) => (
             <Reveal key={i} delay={i * 0.1}>
               <div className="bg-white p-10 rounded-3xl shadow-sm border-b-4 border-transparent hover:border-royal-gold hover:shadow-xl transition-all duration-500 group h-full">
-                <div className="w-14 h-14 bg-[#FBF6E6] rounded-full flex items-center justify-center text-2xl mb-7 group-hover:scale-110 transition">
+                <div className="w-14 h-14 bg-parchment rounded-full flex items-center justify-center text-2xl mb-7 group-hover:scale-110 transition">
                   {p.emoji}
                 </div>
                 <h3 className="font-serif text-xl font-bold text-royal-maroon mb-3">{p.title}</h3>

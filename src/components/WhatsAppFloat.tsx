@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSiteConfig } from "../hooks/useSiteConfig";
+import Icon from "./ui/Icon";
 
 export default function WhatsAppFloat() {
   const { get }            = useSiteConfig();
@@ -34,7 +35,7 @@ export default function WhatsAppFloat() {
         <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-60 pointer-events-none" aria-hidden="true" />
       )}
       <span className="relative w-14 h-14 flex items-center justify-center rounded-full shrink-0">
-        <i className="fa-brands fa-whatsapp text-3xl" aria-hidden="true" />
+        <Icon name="fa-whatsapp" className="text-3xl" />
       </span>
       <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 pr-0 group-hover:pr-5 text-sm font-bold tracking-wide">
         Chat with us!
